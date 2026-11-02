@@ -1,60 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="40%" r="75%">
-      <stop offset="0" stop-color="#2a0d10"/><stop offset="1" stop-color="#0b0607"/>
-    </radialGradient>
-    <linearGradient id="sack" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#cdb184"/><stop offset="1" stop-color="#8a6a3e"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4f8cff"/><stop offset="1" stop-color="#22c3a6"/>
     </linearGradient>
-    <radialGradient id="brain" cx="50%" cy="60%" r="60%">
-      <stop offset="0" stop-color="#ffe6a8"/><stop offset=".6" stop-color="#e0a83a"/><stop offset="1" stop-color="#8a4f0a"/>
+    <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff6c2"/><stop offset="1" stop-color="#ffd23f" stop-opacity="0"/>
     </radialGradient>
-    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <pattern id="weave" width="10" height="10" patternUnits="userSpaceOnUse">
-      <path d="M0 5h10M5 0v10" stroke="#6d5130" stroke-width="1" opacity=".35"/>
-    </pattern>
   </defs>
-  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
-  <!-- broken halo -->
-  <g fill="none" stroke="#c9a24a" stroke-width="6">
-    <path d="M300 52 A206 206 0 0 1 458 300"/>
-    <path d="M430 372 A206 206 0 0 1 120 410"/>
-    <path d="M70 330 A206 206 0 0 1 212 52"/>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <circle cx="256" cy="210" r="190" fill="url(#sun)" opacity=".55"/>
+  <!-- rays -->
+  <g stroke="#fff" stroke-width="18" stroke-linecap="round" opacity=".9">
+    <path d="M256 44v30"/><path d="M104 104l22 22"/><path d="M408 104l-22 22"/>
+    <path d="M58 226h30"/><path d="M454 226h-30"/>
   </g>
-  <path d="M256 30 l12 20 -12 20 -12 -20z" fill="#c9a24a"/>
-  <!-- straw strands behind head -->
-  <g stroke="#d9b54e" stroke-width="5" stroke-linecap="round">
-    <path d="M150 300 L96 330"/><path d="M150 320 L104 366"/><path d="M160 336 L130 392"/>
-    <path d="M362 300 L416 330"/><path d="M362 320 L408 366"/><path d="M352 336 L382 392"/>
-    <path d="M220 380 L210 440"/><path d="M256 384 L256 452"/><path d="M292 380 L302 440"/>
+  <!-- bulb -->
+  <path d="M256 104c-72 0-126 54-126 122 0 44 22 74 46 98 14 14 22 30 22 48v10h116v-10c0-18 8-34 22-48 24-24 46-54 46-98 0-68-54-122-126-122z" fill="#fff"/>
+  <rect x="200" y="394" width="112" height="22" rx="11" fill="#fff"/>
+  <rect x="214" y="426" width="84" height="22" rx="11" fill="#fff"/>
+  <!-- 3x3 dot matrix inside bulb -->
+  <g fill="#4f8cff">
+    <circle cx="210" cy="190" r="17"/><circle cx="256" cy="190" r="17"/><circle cx="302" cy="190" r="17"/>
+    <circle cx="210" cy="236" r="17"/><circle cx="256" cy="236" r="17"/><circle cx="302" cy="236" r="17"/>
+    <circle cx="210" cy="282" r="17"/><circle cx="256" cy="282" r="17"/>
   </g>
-  <!-- sack head -->
-  <path d="M168 196 Q150 300 186 360 Q256 400 326 360 Q362 300 344 196 Z" fill="url(#sack)" stroke="#2b1a10" stroke-width="5"/>
-  <path d="M168 196 Q150 300 186 360 Q256 400 326 360 Q362 300 344 196 Z" fill="url(#weave)"/>
-  <!-- rope tie at neck -->
-  <path d="M184 352 Q256 380 328 352" fill="none" stroke="#5a3a1a" stroke-width="10" stroke-linecap="round"/>
-  <!-- open torn top: brain glowing inside -->
-  <path d="M168 196 L184 176 L200 192 L218 170 L238 188 L256 166 L274 188 L294 170 L312 192 L328 176 L344 196 Q256 214 168 196Z" fill="#1a0b08" stroke="#2b1a10" stroke-width="4"/>
-  <g filter="url(#glow)">
-    <path d="M196 188 Q192 128 240 118 Q256 98 276 116 Q322 120 318 186 Q256 200 196 188Z" fill="url(#brain)" stroke="#7a3e08" stroke-width="4"/>
-    <path d="M256 112 Q250 150 258 192" fill="none" stroke="#7a3e08" stroke-width="4"/>
-    <path d="M214 156 Q230 146 240 160 M276 146 Q290 134 302 152 M222 178 Q236 168 246 180 M270 172 Q286 164 300 176" fill="none" stroke="#9a560f" stroke-width="3.5" stroke-linecap="round"/>
-  </g>
-  <!-- eyes: one stitched X, one glowing -->
-  <g stroke="#2b1a10" stroke-width="7" stroke-linecap="round">
-    <path d="M200 246 L232 274 M232 246 L200 274"/>
-  </g>
-  <g filter="url(#glow)">
-    <circle cx="300" cy="260" r="20" fill="#0b0607" stroke="#d63a2f" stroke-width="5"/>
-    <circle cx="300" cy="260" r="8" fill="#ffd27a"/>
-  </g>
-  <!-- stitched mouth -->
-  <path d="M206 318 Q256 338 306 318" fill="none" stroke="#2b1a10" stroke-width="5"/>
-  <g stroke="#2b1a10" stroke-width="4" stroke-linecap="round">
-    <path d="M216 312 L214 330"/><path d="M234 318 L233 336"/><path d="M256 320 L256 338"/><path d="M278 318 L279 336"/><path d="M296 312 L298 330"/>
-  </g>
-  <!-- seam crack in red -->
-  <path d="M330 220 L318 244 L332 262 L322 288" fill="none" stroke="#9b1b22" stroke-width="4"/>
+  <circle cx="302" cy="282" r="19" fill="#ffb703"/>
+  <circle cx="302" cy="282" r="19" fill="none" stroke="#ff8a00" stroke-width="5"/>
 </svg>
