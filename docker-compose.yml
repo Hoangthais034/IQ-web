@@ -1,0 +1,64 @@
+# Production compose for Dokploy.
+# No host ports are published: Dokploy's Traefik reaches `web` over the internal
+# network, so nothing here can clash with other services on the server.
+# In Dokploy, attach the domain to service `web`, container port 3000.
+name: iq-web
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: ./api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      API_JWT_SECRET: ${API_JWT_SECRET}
+      ADMIN_EMAILS: ${ADMIN_EMAILS}
+      CORS_ORIGINS: ${NEXT_PUBLIC_SITE_URL}
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+
+  web:
+    build:
+      context: ./web
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+        NEXT_PUBLIC_ADS_ENABLED: ${NEXT_PUBLIC_ADS_ENABLED:-false}
+        NEXT_PUBLIC_POPUNDER_COOLDOWN_HOURS: ${NEXT_PUBLIC_POPUNDER_COOLDOWN_HOURS:-48}
+    restart: unless-stopped
+    environment:
+      AUTH_SECRET: ${AUTH_SECRET}
+      AUTH_URL: ${NEXT_PUBLIC_SITE_URL}
+      AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID}
+      AUTH_GOOGLE_SECRET: ${AUTH_GOOGLE_SECRET}
+      API_JWT_SECRET: ${API_JWT_SECRET}
+      API_INTERNAL_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    expose:
+      - "3000"
+
+volumes:
+  db-data:
