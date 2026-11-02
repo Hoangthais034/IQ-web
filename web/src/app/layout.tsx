@@ -25,7 +25,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <AdsProvider enabled={adsEnabled}>
           <header className="border-b">
             <nav className="mx-auto flex max-w-3xl items-center gap-4 px-4 py-3 text-sm">
-              <Link href="/" className="font-semibold">Test IQ</Link>
+              <Link href="/" className="flex items-center gap-2 font-semibold">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo-mark.svg" alt="" width={28} height={28} />
+                Test IQ
+              </Link>
               <Link href="/meo">Mẹo</Link>
               <Link href="/practice">Luyện</Link>
               <span className="flex-1" />

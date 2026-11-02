@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="45%" r="70%">
+      <stop offset="0" stop-color="#2a0d10"/><stop offset="1" stop-color="#0b0607"/>
+    </radialGradient>
+    <radialGradient id="iris" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffd27a"/><stop offset=".55" stop-color="#d4a017"/><stop offset="1" stop-color="#7a4a06"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <!-- broken halo -->
+  <g fill="none" stroke="#c9a24a" stroke-width="6" stroke-linecap="square">
+    <path d="M256 56 A200 200 0 0 1 452 236"/>
+    <path d="M444 300 A200 200 0 0 1 330 442"/>
+    <path d="M140 418 A200 200 0 0 1 200 64"/>
+  </g>
+  <g fill="#c9a24a">
+    <path d="M256 40 l10 16 -10 16 -10 -16z"/>
+    <path d="M472 256 l-16 10 -16 -10 16 -10z" transform="rotate(-8 456 256)"/>
+    <path d="M180 436 l18 -4 4 18 -18 4z"/>
+  </g>
+  <!-- 3x3 matrix, last cell missing -->
+  <g fill="#e8dcc8" stroke="#0b0607" stroke-width="4">
+    <rect x="146" y="146" width="62" height="62"/>
+    <rect x="225" y="146" width="62" height="62" fill="#9b1b22"/>
+    <rect x="304" y="146" width="62" height="62"/>
+    <rect x="146" y="225" width="62" height="62" fill="#9b1b22"/>
+    <rect x="225" y="225" width="62" height="62"/>
+    <rect x="304" y="225" width="62" height="62" fill="#9b1b22"/>
+    <rect x="146" y="304" width="62" height="62"/>
+    <rect x="225" y="304" width="62" height="62" fill="#9b1b22"/>
+  </g>
+  <!-- the eye in the empty cell -->
+  <g transform="translate(335 335)" filter="url(#glow)">
+    <path d="M-58 0 Q0 -46 58 0 Q0 46 -58 0Z" fill="#0b0607" stroke="#d63a2f" stroke-width="5"/>
+    <circle r="22" fill="url(#iris)"/>
+    <path d="M0 -18 L5 0 0 18 -5 0Z" fill="#0b0607"/>
+  </g>
+  <!-- crack -->
+  <path d="M287 146 L300 118 L292 96 L310 70" fill="none" stroke="#d63a2f" stroke-width="4"/>
+  <path d="M146 287 L118 296 L100 284 L74 300" fill="none" stroke="#d63a2f" stroke-width="4"/>
+</svg>
