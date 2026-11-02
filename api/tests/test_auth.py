@@ -46,11 +46,12 @@ def test_claim_anon_attempts_only_unowned():
     from app.models import Attempt, User
 
     anon = uuid.uuid4()
-    ha = {"Authorization": f"Bearer {token('owner-a@example.com')}"}
-    hb = {"Authorization": f"Bearer {token('owner-b@example.com')}"}
+    email_a, email_b = f"a-{anon}@example.com", f"b-{anon}@example.com"
+    ha = {"Authorization": f"Bearer {token(email_a)}"}
+    hb = {"Authorization": f"Bearer {token(email_b)}"}
     client.get("/me", headers=ha)
     with SessionLocal() as db:
-        a = db.query(User).filter_by(email="owner-a@example.com").one()
+        a = db.query(User).filter_by(email=email_a).one()
         db.add_all([
             Attempt(mode="full", anon_id=anon),
             Attempt(mode="full", anon_id=anon),

@@ -76,6 +76,7 @@ class Attempt(Base):
     iq_estimate: Mapped[int | None]
     # how the score was unlocked: "ad" | "subscription"; None = still locked
     unlocked_via: Mapped[str | None] = mapped_column(String(20))
+    ad_gate_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     answers: Mapped[list["AttemptAnswer"]] = relationship(back_populates="attempt", order_by="AttemptAnswer.position")
 

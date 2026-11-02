@@ -10,6 +10,17 @@ export default async function Home() {
       <p className="text-neutral-600">
         40 câu, 35 phút. Kết quả chỉ mang tính tham khảo, không phải bài test IQ chuẩn hóa.
       </p>
+      <div className="flex flex-wrap gap-3">
+        <Link href="/test" className="rounded-lg bg-neutral-900 px-5 py-3 font-medium text-white">
+          Làm bài test
+        </Link>
+        <Link href="/practice" className="rounded-lg border px-5 py-3 font-medium">
+          Luyện theo dạng
+        </Link>
+        <Link href="/meo" className="rounded-lg border px-5 py-3 font-medium">
+          Mẹo làm bài
+        </Link>
+      </div>
       {session?.user ? (
         <div className="flex items-center gap-4">
           <span>Xin chào, {session.user.name ?? session.user.email}</span>
@@ -23,7 +34,7 @@ export default async function Home() {
           </form>
         </div>
       ) : (
-        <Link href="/login" className="w-fit rounded-lg bg-neutral-900 px-4 py-3 font-medium text-white">
+        <Link href="/login" className="w-fit underline">
           Đăng nhập
         </Link>
       )}

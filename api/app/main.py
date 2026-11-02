@@ -4,7 +4,7 @@ from sqlalchemy import text
 
 from app.config import get_settings
 from app.db import engine
-from app.routers import me
+from app.routers import admin, attempts, me
 
 app = FastAPI(title="IQ Test API", version="0.1.0")
 app.add_middleware(
@@ -15,6 +15,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(me.router)
+app.include_router(attempts.router)
+app.include_router(admin.router)
 
 
 @app.get("/health")

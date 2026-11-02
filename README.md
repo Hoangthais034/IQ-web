@@ -28,6 +28,15 @@ Test API: `cd api && uv sync && uv run pytest` (cần Postgres ở `DATABASE_URL
 2. Khai báo các biến trong `.env.example` ở tab Environment. Biến `NEXT_PUBLIC_*` được đưa vào lúc build.
 3. Gắn domain vào service `web`, container port `3000`, bật HTTPS. Compose production không publish port nào ra host nên không trùng service khác.
 4. Bật backup cho volume `db-data`.
+5. Lần đầu deploy, tạo ngân hàng đề: `docker compose exec api python -m app.cli generate --count 300`.
+
+## Ngân hàng đề
+
+- `python -m app.cli generate --count N`: sinh đề dãy số và ma trận hình bằng code, trạng thái approved.
+- `python -m app.cli import file.json [--dry-run] [--approve]`: nhập đề JSON (ví dụ do skill Claude `iq-question-writer` viết), mặc định trạng thái pending chờ duyệt qua `/admin/questions`.
+- Định dạng đề: `api/app/schemas.py` (`QuestionIn`).
+
+Frontend không chấm điểm: đáp án không bao giờ gửi xuống trình duyệt; chấm điểm, quy ra IQ, hết giờ và mở khóa đều do API xử lý.
 
 ## Cần chuẩn bị
 
