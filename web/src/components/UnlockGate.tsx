@@ -3,7 +3,10 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
+import Link from "next/link";
+
 import { startAdGate, unlockAttempt } from "@/app/test/actions";
+import { AdSlot } from "@/components/ads";
 
 export function UnlockGate({ attemptId }: { attemptId: string }) {
   const router = useRouter();
@@ -41,16 +44,17 @@ export function UnlockGate({ attemptId }: { attemptId: string }) {
           <button onClick={watchAd} disabled={pending} className="rounded-lg bg-neutral-900 px-4 py-3 text-white">
             Xem quảng cáo 15 giây
           </button>
-          <button disabled className="rounded-lg border px-4 py-3 text-neutral-500" title="Sắp có">
-            Gói tháng 30.000đ (sắp có)
-          </button>
+          <Link
+            href={`/goi-thang?next=${encodeURIComponent(`/test/${attemptId}/result`)}`}
+            className="rounded-lg border px-4 py-3 text-center"
+          >
+            Gói tháng 30.000đ, không quảng cáo
+          </Link>
         </div>
       ) : (
         <div className="space-y-3">
-          {/* Ad slot: filled with Adsterra native + banner in step 4 */}
-          <div data-ad-slot="unlock-gate" className="flex h-64 items-center justify-center rounded-lg bg-neutral-100 text-neutral-400">
-            Quảng cáo
-          </div>
+          <AdSlot kind="native" className="my-0" />
+          <AdSlot kind="banner" className="my-0" />
           <button
             onClick={reveal}
             disabled={left > 0 || pending}

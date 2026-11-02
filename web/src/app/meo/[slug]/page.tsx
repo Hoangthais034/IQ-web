@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { startAttempt } from "@/app/test/actions";
+import { AdSlot } from "@/components/ads";
 import { TIPS, tipBySlug } from "@/content/tips";
 
 export function generateStaticParams() {
@@ -24,7 +25,7 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
         <p className="mt-3 text-neutral-700">{tip.intro}</p>
       </header>
 
-      <div data-ad-slot="tip-top" />
+      <AdSlot kind="banner" />
 
       <section>
         <h2 className="mb-2 text-xl font-semibold">Nhận ra dạng đề</h2>
@@ -58,7 +59,7 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
         </form>
       )}
 
-      <div data-ad-slot="tip-bottom" />
+      <AdSlot kind="native" />
     </main>
   );
 }

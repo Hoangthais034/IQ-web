@@ -11,6 +11,13 @@ class Settings(BaseSettings):
     admin_emails: str = ""
     cors_origins: str = "http://localhost:3000"
 
+    # SePay (VietQR bank transfer). Webhook auth header: "Authorization: Apikey <key>".
+    sepay_webhook_api_key: str = ""
+    sepay_bank_account: str = ""
+    sepay_bank: str = ""  # bank short name, e.g. Vietcombank, MBBank
+    subscription_price_vnd: int = 30000
+    subscription_days: int = 30
+
     @property
     def admin_email_set(self) -> set[str]:
         return {e.strip().lower() for e in self.admin_emails.split(",") if e.strip()}

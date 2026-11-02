@@ -7,7 +7,7 @@ export type Tip = {
   rules: { name: string; detail: string }[];
   steps: string[];
   example: { question: string; answer: string; why: string };
-  practiceType?: "number_series" | "matrix";
+  practiceType?: "number_series" | "matrix" | "odd_one_out" | "rotation";
 };
 
 export const TIPS: Tip[] = [
@@ -60,6 +60,49 @@ export const TIPS: Tip[] = [
       why: "Số hình tăng 1 theo cột, loại hình và kiểu tô giữ nguyên trong hàng.",
     },
     practiceType: "matrix",
+  },
+  {
+    slug: "hinh-khac-loai",
+    title: "Mẹo làm dạng tìm hình khác loại",
+    intro: "Bốn hình giống nhau ở một điểm, một hình thì không. Điểm chung đó thường chỉ là một thuộc tính.",
+    recognize: ["Đề cho 5 hình và hỏi hình nào khác loại."],
+    rules: [
+      { name: "Loại hình", detail: "Bốn hình tròn, một hình vuông." },
+      { name: "Số lượng", detail: "Bốn ô có 3 hình, một ô có 2 hình." },
+      { name: "Kiểu tô", detail: "Bốn hình rỗng, một hình kẻ sọc." },
+    ],
+    steps: [
+      "Xét lần lượt từng thuộc tính: loại hình, số lượng, kiểu tô.",
+      "Với mỗi thuộc tính, đếm xem giá trị nào chỉ xuất hiện một lần.",
+      "Thuộc tính nào có đúng một hình lệch là thuộc tính của đề. Các thuộc tính khác chỉ để gây nhiễu.",
+    ],
+    example: {
+      question: "2 lục giác đen, 2 lục giác sọc, 4 hình vuông đen, 4 lục giác đen, 2 lục giác sọc",
+      answer: "4 hình vuông đen",
+      why: "Loại hình: bốn hình là lục giác, chỉ một hình vuông. Số lượng và kiểu tô đều lặp lại.",
+    },
+    practiceType: "odd_one_out",
+  },
+  {
+    slug: "xoay-hinh",
+    title: "Mẹo làm dạng xoay hình",
+    intro: "Phải phân biệt hình xoay với hình bị lật như qua gương. Hình lật không bao giờ xoay về được hình gốc.",
+    recognize: ["Đề cho một hình gốc và hỏi hình nào là nó sau khi xoay."],
+    rules: [
+      { name: "Xoay", detail: "Giữ nguyên chiều, chỉ đổi hướng: 90, 180, 270 độ." },
+      { name: "Lật gương", detail: "Đảo trái phải. Trông giống nhưng là hình khác." },
+    ],
+    steps: [
+      "Chọn một điểm mốc dễ thấy ở hình gốc, ví dụ phần nhô ra.",
+      "Đi theo chiều kim đồng hồ quanh hình gốc, ghi thứ tự các phần.",
+      "Ở mỗi đáp án, tìm điểm mốc rồi đi theo chiều kim đồng hồ. Thứ tự giống hình gốc là hình xoay, ngược lại là hình lật.",
+    ],
+    example: {
+      question: "Hình chữ L xoay 90 độ.",
+      answer: "Chữ L nằm ngang, phần ngắn chĩa xuống",
+      why: "Chữ L lật gương sẽ có phần ngắn chĩa sang hướng ngược lại dù xoay thế nào.",
+    },
+    practiceType: "rotation",
   },
   {
     slug: "logic",

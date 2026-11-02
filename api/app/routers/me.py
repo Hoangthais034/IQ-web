@@ -4,13 +4,13 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
-from sqlalchemy import update
+from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 
 from app.auth import current_user
 from app.config import get_settings
 from app.db import get_db
-from app.models import Attempt, User
+from app.models import Attempt, Subscription, User
 
 router = APIRouter(prefix="/me", tags=["me"])
 
@@ -21,16 +21,21 @@ class MeOut(BaseModel):
     avatar_url: str | None
     is_admin: bool
     popunder_seen_at: datetime | None
+    subscription_ends_at: datetime | None
 
 
 @router.get("", response_model=MeOut)
-def read_me(user: Annotated[User, Depends(current_user)]) -> MeOut:
+def read_me(user: Annotated[User, Depends(current_user)], db: Annotated[Session, Depends(get_db)]) -> MeOut:
+    ends = db.scalar(
+        select(func.max(Subscription.ends_at)).where(Subscription.user_id == user.id, Subscription.ends_at > datetime.now(timezone.utc))
+    )
     return MeOut(
         email=user.email,
         name=user.name,
         avatar_url=user.avatar_url,
         is_admin=user.email in get_settings().admin_email_set,
         popunder_seen_at=user.popunder_seen_at,
+        subscription_ends_at=ends,
     )
 
 

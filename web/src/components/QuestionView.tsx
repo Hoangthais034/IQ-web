@@ -26,11 +26,19 @@ export function QuestionView({
       <p className="text-lg font-medium">{question.prompt}</p>
       {question.prompt_svg && (
         <div
-          className="mx-auto w-full max-w-xs text-neutral-900"
+          className={`mx-auto w-full text-neutral-900 ${question.type === "rotation" ? "max-w-[180px]" : "max-w-xs"}`}
           dangerouslySetInnerHTML={{ __html: question.prompt_svg }}
         />
       )}
-      <div className={`grid gap-3 ${question.options.some((o) => o.svg) ? "grid-cols-3" : "grid-cols-2"}`}>
+      <div
+        className={`grid gap-3 ${
+          !question.options.some((o) => o.svg)
+            ? "grid-cols-2"
+            : question.options.length === 4
+              ? "grid-cols-2 sm:grid-cols-4"
+              : "grid-cols-3"
+        }`}
+      >
         {question.options.map((o) => {
           const isChosen = chosen === o.key;
           const isCorrect = correctKey === o.key;
