@@ -20,6 +20,8 @@ type AdminQuestion = {
   source: string;
 };
 
+type ContactMsg = { id: string; name: string; email: string; topic: string; message: string; created_at: string; emailed_at: string | null };
+const CONTACT_TOPIC: Record<string, string> = { gop_y: "Góp ý", bao_loi: "Báo lỗi câu hỏi", thanh_toan: "Thanh toán", du_lieu: "Dữ liệu cá nhân", khac: "Khác" };
 type Unmatched = { id: string; amount_vnd: number; content: string; reason: string; received_at: string };
 
 const REASON: Record<string, string> = {
@@ -32,10 +34,12 @@ const REASON: Record<string, string> = {
 export default async function AdminPage() {
   const me = await getMe();
   if (!me?.is_admin) notFound();
-  const [{ data }, { data: txs }] = await Promise.all([
+  const [{ data }, { data: txs }, { data: msgs }] = await Promise.all([
     apiJson<AdminQuestion[]>("/admin/questions?status=pending&limit=50"),
     apiJson<Unmatched[]>("/admin/transactions/unmatched"),
+    apiJson<ContactMsg[]>("/admin/contact-messages?limit=30"),
   ]);
+  const messages = msgs ?? [];
   const questions = data ?? [];
   const unmatched = txs ?? [];
 
@@ -57,6 +61,19 @@ export default async function AdminPage() {
           <form action={resolveTransaction.bind(null, t.id)}>
             <button className="text-sm text-neutral-500 underline">Bỏ qua (không phải tiền mua gói)</button>
           </form>
+        </article>
+      ))}
+
+      <h1 className="text-2xl font-bold">Liên hệ gần đây ({messages.length})</h1>
+      {messages.length === 0 && <p className="text-neutral-600">Chưa có tin nhắn nào.</p>}
+      {messages.map((m) => (
+        <article key={m.id} className="space-y-1 rounded-lg border p-4">
+          <p className="text-sm">
+            <b>{m.name}</b> · <a href={`mailto:${m.email}`} className="text-blue-600 underline">{m.email}</a> ·{" "}
+            {CONTACT_TOPIC[m.topic] ?? m.topic} · {new Date(m.created_at).toLocaleString("vi-VN")}
+            {!m.emailed_at && <span className="ml-2 rounded bg-amber-100 px-1.5 text-xs text-amber-800">chưa gửi email</span>}
+          </p>
+          <p className="whitespace-pre-wrap text-sm text-neutral-700">{m.message}</p>
         </article>
       ))}
 

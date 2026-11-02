@@ -18,6 +18,15 @@ class Settings(BaseSettings):
     subscription_price_vnd: int = 30000
     subscription_days: int = 30
 
+    # Contact form: messages are stored in DB, then emailed to contact_to_email via SMTP (Gmail App Password works).
+    contact_to_email: str = ""
+    smtp_host: str = "smtp.gmail.com"
+    smtp_port: int = 587  # 587 = STARTTLS, 465 = SSL
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_from: str = ""  # defaults to smtp_username
+    contact_max_per_hour: int = 3
+
     @property
     def admin_email_set(self) -> set[str]:
         return {e.strip().lower() for e in self.admin_emails.split(",") if e.strip()}

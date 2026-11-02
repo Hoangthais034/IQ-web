@@ -32,6 +32,11 @@ services:
       SEPAY_BANK_ACCOUNT: ${SEPAY_BANK_ACCOUNT:-}
       SEPAY_BANK: ${SEPAY_BANK:-}
       SUBSCRIPTION_PRICE_VND: ${SUBSCRIPTION_PRICE_VND:-30000}
+      CONTACT_TO_EMAIL: ${CONTACT_TO_EMAIL:-}
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
     depends_on:
       db:
         condition: service_healthy

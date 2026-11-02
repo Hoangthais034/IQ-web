@@ -10,7 +10,7 @@ from app.auth import admin_user
 from app.db import get_db
 from datetime import datetime, timezone
 
-from app.models import Payment, Question, QuestionStatus, UnmatchedTransaction, User
+from app.models import ContactMessage, Payment, Question, QuestionStatus, UnmatchedTransaction, User
 from app.routers.payments import grant_subscription
 
 router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(admin_user)])
@@ -86,3 +86,20 @@ def resolve_unmatched(tx_id: uuid.UUID, body: ResolveIn, db: DbDep):
         t.resolved_user_id = user.id
     t.resolved_at = datetime.now(timezone.utc)
     db.commit()
+
+
+class ContactOut(BaseModel):
+    id: uuid.UUID
+    name: str
+    email: str
+    topic: str
+    message: str
+    created_at: datetime
+    emailed_at: datetime | None
+
+
+@router.get("/contact-messages", response_model=list[ContactOut])
+def list_contact_messages(db: DbDep, limit: int = 50):
+    """Latest contact messages, so nothing is lost when SMTP is down or not configured."""
+    rows = db.scalars(select(ContactMessage).order_by(ContactMessage.created_at.desc()).limit(min(limit, 200)))
+    return [ContactOut.model_validate(m, from_attributes=True) for m in rows]

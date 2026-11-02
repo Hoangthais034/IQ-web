@@ -52,8 +52,8 @@ export default function TermsPage() {
             kích hoạt sau khi nhận được giao dịch.
           </li>
           <li>
-            Nếu bạn chuyển sai nội dung, thiếu tiền, hoặc đã chuyển mà gói chưa kích hoạt sau 15 phút, hãy gửi ảnh biên lai
-            tới <b>{email}</b>. Chúng tôi sẽ kích hoạt thủ công hoặc hoàn tiền.
+            Nếu bạn chuyển sai nội dung, thiếu tiền, hoặc đã chuyển mà gói chưa kích hoạt sau 15 phút, hãy báo qua{" "}
+            <Link href="/lien-he?chu_de=thanh_toan" className="text-blue-600 underline">trang liên hệ</Link> hoặc gửi ảnh biên lai tới <b>{email}</b>. Chúng tôi sẽ kích hoạt thủ công hoặc hoàn tiền.
           </li>
           <li>
             Gói đã kích hoạt không được hoàn tiền, trừ khi web gặp lỗi khiến bạn không dùng được quyền lợi của gói.

@@ -87,7 +87,7 @@ export default function PrivacyPage() {
         <h2>7. Quyền của bạn</h2>
         <p>
           Theo Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân, bạn có quyền xem, sửa, yêu cầu xóa dữ liệu và rút lại sự
-          đồng ý. Gửi yêu cầu tới <b>{email}</b> từ email bạn dùng để đăng nhập. Chúng tôi phản hồi trong vòng 7 ngày làm
+          đồng ý. Gửi yêu cầu qua <Link href="/lien-he?chu_de=du_lieu" className="text-blue-600 underline">trang liên hệ</Link> hoặc email <b>{email}</b>, dùng đúng email bạn đăng nhập. Chúng tôi phản hồi trong vòng 7 ngày làm
           việc. Bạn cũng có thể gỡ quyền truy cập của web trong phần Bảo mật của tài khoản Google.
         </p>
       </section>

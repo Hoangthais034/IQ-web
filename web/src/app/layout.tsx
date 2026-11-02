@@ -47,6 +47,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               <span>© {new Date().getFullYear()} Test IQ</span>
               <Link href="/dieu-khoan" className="hover:underline">Điều khoản sử dụng</Link>
               <Link href="/bao-mat" className="hover:underline">Chính sách bảo mật</Link>
+              <Link href="/lien-he" className="hover:underline">Liên hệ</Link>
             </div>
           </footer>
           <Popunder loggedIn={!!me} serverSeenAt={me?.popunder_seen_at ?? null} />
