@@ -23,3 +23,16 @@ def test_odd_one_out_unique():
     for _ in range(300):
         q = GENERATORS["odd_one_out"](rng)
         assert len(q["options"]) == 5
+
+
+def test_initial_bank_has_100_valid_per_type():
+    from collections import Counter
+
+    from app.seed.build import initial_bank
+
+    bank = initial_bank()
+    for q in bank:
+        QuestionIn(**q)
+    assert Counter(q["type"] for q in bank) == {t: 100 for t in ["number_series", "matrix", "odd_one_out", "rotation", "logic", "verbal"]}
+    prompts = [(q["prompt"], tuple(sorted(o["text"] for o in q["options"]))) for q in bank if q["source"] == "claude"]
+    assert len(prompts) == len(set(prompts)), "duplicate hand-written questions"

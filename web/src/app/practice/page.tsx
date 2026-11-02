@@ -3,8 +3,7 @@ import { TYPE_LABELS, type QuestionType } from "@/lib/types";
 
 export const metadata = { title: "Luyện theo dạng đề" };
 
-// Types that have questions in the bank today; logic and verbal come from the Claude skill after review.
-const AVAILABLE: QuestionType[] = ["number_series", "matrix", "odd_one_out", "rotation"];
+const AVAILABLE: QuestionType[] = ["number_series", "matrix", "odd_one_out", "rotation", "logic", "verbal"];
 
 export default function PracticePage() {
   return (

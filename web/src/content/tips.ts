@@ -7,7 +7,7 @@ export type Tip = {
   rules: { name: string; detail: string }[];
   steps: string[];
   example: { question: string; answer: string; why: string };
-  practiceType?: "number_series" | "matrix" | "odd_one_out" | "rotation";
+  practiceType?: "number_series" | "matrix" | "odd_one_out" | "rotation" | "logic" | "verbal";
 };
 
 export const TIPS: Tip[] = [
@@ -124,6 +124,7 @@ export const TIPS: Tip[] = [
       answer: "Tom là động vật",
       why: "Tom nằm trong nhóm mèo, nhóm mèo nằm trọn trong nhóm động vật.",
     },
+    practiceType: "logic",
   },
   {
     slug: "ngon-ngu",
@@ -141,6 +142,7 @@ export const TIPS: Tip[] = [
       "Nếu nhiều đáp án hợp, làm câu nối cụ thể hơn.",
     ],
     example: { question: "Bút : viết = dao : ?", answer: "cắt", why: "Quan hệ là công cụ và việc nó dùng để làm." },
+    practiceType: "verbal",
   },
 ];
 

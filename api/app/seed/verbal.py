@@ -1,0 +1,117 @@
+"""Hand-written Vietnamese verbal questions, compact form.
+
+Words are everyday vocabulary; relations are stated in the explanation so a reviewer can
+check each one. Built into QuestionIn dicts by app.seed.build.
+"""
+
+# (difficulty, a, b, c, answer, [3 wrong], relation)
+ANALOGIES = [
+    (1, "Bút", "viết", "dao", "cắt", ["bếp", "thép", "gọt táo"], "đồ vật và việc nó dùng để làm"),
+    (1, "Cá", "nước", "chim", "trời", ["cây", "tổ", "cánh"], "con vật và nơi nó sống, di chuyển"),
+    (1, "Bác sĩ", "bệnh viện", "giáo viên", "trường học", ["học sinh", "bảng đen", "bài giảng"], "nghề và nơi làm việc"),
+    (1, "Ngày", "đêm", "nóng", "lạnh", ["ấm", "nắng", "mùa hè"], "hai từ trái nghĩa"),
+    (1, "Mắt", "nhìn", "tai", "nghe", ["nói", "mũi", "âm thanh"], "bộ phận cơ thể và chức năng"),
+    (1, "Gà", "gà con", "chó", "chó con", ["mèo con", "chó sói", "cún cưng"], "con vật và con non của nó"),
+    (1, "Lá", "cây", "trang", "sách", ["giấy", "bút", "chữ"], "bộ phận và tổng thể"),
+    (1, "Mưa", "ô", "nắng", "mũ", ["mây", "gió", "áo mưa"], "thời tiết và đồ dùng để che"),
+    (2, "Thợ may", "kéo", "thợ mộc", "cưa", ["vải", "gỗ", "bàn ghế"], "nghề và dụng cụ chính"),
+    (2, "Bánh xe", "xe đạp", "ngón tay", "bàn tay", ["móng tay", "cánh tay", "găng tay"], "bộ phận và tổng thể"),
+    (2, "Lúa", "gạo", "nho", "rượu vang", ["quả nho", "vườn nho", "nước"], "nguyên liệu và thứ được làm ra từ nó"),
+    (2, "Đói", "ăn", "khát", "uống", ["nước", "ngủ", "đói"], "nhu cầu và việc làm để đáp ứng"),
+    (2, "Nhanh", "chậm", "cao", "thấp", ["to", "dài", "lớn"], "hai từ trái nghĩa"),
+    (2, "Thư viện", "sách", "bảo tàng", "hiện vật", ["khách tham quan", "vé", "lịch sử"], "nơi chốn và thứ được lưu giữ ở đó"),
+    (2, "Nhạc sĩ", "bài hát", "nhà văn", "tiểu thuyết", ["bút", "độc giả", "nhà xuất bản"], "người và tác phẩm họ tạo ra"),
+    (2, "Giây", "phút", "phút", "giờ", ["ngày", "giây", "tuần"], "đơn vị nhỏ và đơn vị lớn hơn liền kề (60 lần)"),
+    (2, "Mét", "chiều dài", "ki-lô-gam", "khối lượng", ["chiều cao", "thể tích", "tốc độ"], "đơn vị đo và đại lượng nó đo"),
+    (2, "Hạt", "cây", "trứng", "gà", ["vỏ", "lòng đỏ", "ổ"], "giai đoạn đầu và thứ phát triển thành"),
+    (2, "Bàn chải", "răng", "lược", "tóc", ["gương", "đầu", "kéo"], "dụng cụ và bộ phận nó chăm sóc"),
+    (2, "Chìa khóa", "ổ khóa", "mật khẩu", "tài khoản", ["máy tính", "bàn phím", "con số"], "thứ dùng để mở và thứ được mở"),
+    (2, "Sư tử", "thịt", "bò", "cỏ", ["sữa", "chuồng", "sừng"], "con vật và thức ăn chính"),
+    (3, "Hạn hán", "khô", "lũ lụt", "ngập", ["mưa", "sông", "khô"], "hiện tượng và hậu quả trực tiếp"),
+    (3, "Siêng năng", "lười biếng", "khiêm tốn", "kiêu ngạo", ["nhút nhát", "lễ phép", "giản dị"], "hai tính cách trái ngược"),
+    (3, "Hỏi", "trả lời", "gửi", "nhận", ["gọi", "viết", "mất"], "hành động và hành động đáp lại"),
+    (3, "Tác giả", "độc giả", "diễn viên", "khán giả", ["đạo diễn", "sân khấu", "vai diễn"], "người tạo ra và người tiếp nhận"),
+    (3, "Bản đồ", "đường đi", "công thức", "món ăn", ["đầu bếp", "nguyên liệu", "nhà bếp"], "bản hướng dẫn và thứ nó giúp làm ra"),
+    (3, "Thầy thuốc", "chữa bệnh", "luật sư", "bào chữa", ["tòa án", "phạt", "luật pháp"], "nghề và công việc chính"),
+    (3, "Xuân", "hạ", "thu", "đông", ["hè", "tết", "xuân"], "mùa và mùa liền sau nó"),
+    (3, "Nụ", "hoa", "kén", "bướm", ["sâu", "tơ", "trứng"], "giai đoạn trước và giai đoạn trưởng thành"),
+    (3, "Tiết kiệm", "lãng phí", "cẩn thận", "cẩu thả", ["chăm chỉ", "kỹ lưỡng", "chậm chạp"], "hai từ trái nghĩa"),
+    (3, "Trường", "học sinh", "bệnh viện", "bệnh nhân", ["bác sĩ", "thuốc", "y tá"], "nơi chốn và người được phục vụ ở đó"),
+    (3, "Đầu bếp", "nhà hàng", "phi công", "máy bay", ["sân bay", "hành khách", "bầu trời"], "người làm và nơi làm việc"),
+    (4, "Nhà thơ", "câu thơ", "nhạc sĩ", "giai điệu", ["ca sĩ", "đàn", "khán giả"], "người sáng tác và chất liệu họ tạo ra"),
+    (4, "Nguyên nhân", "kết quả", "gieo", "gặt", ["trồng", "hạt", "ruộng"], "việc làm trước và điều thu về sau"),
+    (4, "Thì thầm", "hét", "nhấp", "nốc", ["uống", "nhai", "nuốt"], "cùng một hành động ở mức nhẹ và mức mạnh"),
+    (5, "Chân", "tất", "tay", "găng", ["nhẫn", "áo", "đồng hồ"], "bộ phận và thứ bọc kín nó để giữ ấm"),
+    (5, "Ngọn", "cây", "mũi", "thuyền", ["nước", "buồm", "mái chèo"], "phần đầu nhọn của một vật"),
+]
+
+# (difficulty, [4 words], odd, reason)
+ODD_WORDS = [
+    (1, ["Táo", "Cam", "Chuối", "Cà rốt"], "Cà rốt", "Ba từ kia là quả, cà rốt là củ."),
+    (1, ["Chó", "Mèo", "Gà", "Cá chép"], "Cá chép", "Ba con kia sống trên cạn, cá chép sống dưới nước."),
+    (1, ["Đỏ", "Xanh", "Vàng", "Tròn"], "Tròn", "Ba từ kia là màu sắc, tròn là hình dạng."),
+    (1, ["Bàn", "Ghế", "Tủ", "Quạt điện"], "Quạt điện", "Ba thứ kia là đồ gỗ nội thất, quạt điện là thiết bị điện."),
+    (1, ["Thứ Hai", "Thứ Năm", "Chủ nhật", "Tháng Ba"], "Tháng Ba", "Ba từ kia là ngày trong tuần, tháng Ba là tháng."),
+    (1, ["Xe đạp", "Xe máy", "Ô tô", "Thuyền"], "Thuyền", "Ba phương tiện kia đi trên đường bộ, thuyền đi trên nước."),
+    (2, ["Bác sĩ", "Y tá", "Dược sĩ", "Kỹ sư"], "Kỹ sư", "Ba nghề kia thuộc ngành y."),
+    (2, ["Chạy", "Nhảy", "Bơi", "Ngủ"], "Ngủ", "Ba từ kia là hoạt động vận động."),
+    (2, ["Vui", "Buồn", "Giận", "Cao"], "Cao", "Ba từ kia chỉ cảm xúc, cao chỉ kích thước."),
+    (2, ["Hà Nội", "Đà Nẵng", "Huế", "Mê Kông"], "Mê Kông", "Ba từ kia là tên thành phố, Mê Kông là tên sông."),
+    (2, ["Bút chì", "Thước kẻ", "Tẩy", "Bát"], "Bát", "Ba thứ kia là đồ dùng học tập."),
+    (2, ["Ông", "Bà", "Cháu", "Hàng xóm"], "Hàng xóm", "Ba từ kia chỉ người trong gia đình."),
+    (2, ["Mắt", "Mũi", "Miệng", "Đầu gối"], "Đầu gối", "Ba bộ phận kia nằm trên khuôn mặt."),
+    (2, ["Sắt", "Đồng", "Nhôm", "Gỗ"], "Gỗ", "Ba thứ kia là kim loại."),
+    (2, ["Đàn guitar", "Đàn piano", "Trống", "Micro"], "Micro", "Ba thứ kia là nhạc cụ, micro là thiết bị thu âm."),
+    (3, ["Rất", "Lắm", "Quá", "Đẹp"], "Đẹp", "Ba từ kia chỉ mức độ, đẹp là tính từ chỉ tính chất."),
+    (3, ["Vuông", "Tròn", "Tam giác", "Thẳng"], "Thẳng", "Ba từ kia là tên hình, thẳng chỉ dáng của đường."),
+    (3, ["Mưa", "Tuyết", "Mưa đá", "Gió"], "Gió", "Ba hiện tượng kia là nước rơi từ trời xuống."),
+    (3, ["Hổ", "Báo", "Sư tử", "Voi"], "Voi", "Ba con kia là loài ăn thịt họ mèo."),
+    (3, ["Phở", "Bún", "Miến", "Bánh chưng"], "Bánh chưng", "Ba món kia là món có sợi ăn với nước dùng."),
+    (3, ["Hát", "Múa", "Vẽ", "Rửa bát"], "Rửa bát", "Ba hoạt động kia thuộc nghệ thuật."),
+    (3, ["Nhanh nhẹn", "Hoạt bát", "Lanh lợi", "Chậm chạp"], "Chậm chạp", "Ba từ kia gần nghĩa nhau, chậm chạp trái nghĩa."),
+    (3, ["Hỏi", "Đáp", "Thưa", "Nhìn"], "Nhìn", "Ba từ kia là hoạt động nói."),
+    (4, ["Mét", "Lít", "Giây", "Nhiệt kế"], "Nhiệt kế", "Ba từ kia là đơn vị đo, nhiệt kế là dụng cụ đo."),
+    (4, ["Nhà văn", "Nhà thơ", "Nhà báo", "Nhà kho"], "Nhà kho", "Ba từ kia chỉ người viết, nhà kho chỉ nơi chứa đồ."),
+    (4, ["Bình minh", "Hoàng hôn", "Giữa trưa", "Mùa thu"], "Mùa thu", "Ba từ kia là thời điểm trong ngày, mùa thu là mùa trong năm."),
+    (4, ["Sông", "Suối", "Thác", "Đồi"], "Đồi", "Ba từ kia là dòng nước, đồi là địa hình đất."),
+    (4, ["Lắng nghe", "Thấu hiểu", "Chia sẻ", "Ganh tị"], "Ganh tị", "Ba từ kia là thái độ tích cực với người khác."),
+    (5, ["Kim", "Mộc", "Thủy", "Nhật"], "Nhật", "Kim, Mộc, Thủy là ba trong ngũ hành (Kim, Mộc, Thủy, Hỏa, Thổ); Nhật nghĩa là mặt trời."),
+    (5, ["Cẩn thận", "Chu đáo", "Kỹ lưỡng", "Hấp tấp"], "Hấp tấp", "Ba từ kia đều chỉ sự cẩn trọng, hấp tấp ngược lại."),
+]
+
+# (difficulty, kind, word, answer, [3 wrong])  kind: "trái nghĩa" | "gần nghĩa"
+SYNONYM_ANTONYM = [
+    (1, "trái nghĩa", "Cao", "Thấp", ["Lớn", "Dài", "Rộng"]),
+    (1, "trái nghĩa", "Mở", "Đóng", ["Bật", "Kéo", "Ra"]),
+    (1, "trái nghĩa", "Sạch", "Bẩn", ["Mới", "Khô", "Thơm"]),
+    (1, "gần nghĩa", "To", "Lớn", ["Nhỏ", "Dài", "Nặng"]),
+    (2, "trái nghĩa", "Siêng năng", "Lười biếng", ["Chăm chỉ", "Cần cù", "Nhanh nhẹn"]),
+    (2, "trái nghĩa", "Dũng cảm", "Hèn nhát", ["Mạnh mẽ", "Can đảm", "Bình tĩnh"]),
+    (2, "gần nghĩa", "Xinh đẹp", "Xinh xắn", ["Xấu xí", "Sang trọng", "Giàu có"]),
+    (2, "gần nghĩa", "Nhanh", "Mau", ["Chậm", "Xa", "Vội"]),
+    (2, "gần nghĩa", "Chăm chỉ", "Cần cù", ["Lười biếng", "Thông minh", "Vui vẻ"]),
+    (3, "trái nghĩa", "Hào phóng", "Keo kiệt", ["Rộng rãi", "Giàu có", "Tiết kiệm"]),
+    (3, "trái nghĩa", "Khiêm tốn", "Khoe khoang", ["Giản dị", "Lễ phép", "Nhút nhát"]),
+    (3, "gần nghĩa", "Bao la", "Mênh mông", ["Chật hẹp", "Cao vút", "Sâu thẳm"]),
+    (3, "gần nghĩa", "Thật thà", "Trung thực", ["Hiền lành", "Thông minh", "Khéo léo"]),
+    (4, "trái nghĩa", "Thịnh vượng", "Suy tàn", ["Phát đạt", "Giàu sang", "Ổn định"]),
+    (4, "gần nghĩa", "Kiên trì", "Bền bỉ", ["Nóng vội", "Cứng rắn", "Mạnh mẽ"]),
+    (4, "trái nghĩa", "Đoàn kết", "Chia rẽ", ["Hợp tác", "Thống nhất", "Riêng tư"]),
+    (5, "gần nghĩa", "Tổ quốc", "Đất nước", ["Quê hương", "Thủ đô", "Dân tộc"]),
+]
+
+
+# Word categories with no overlap, used to generate extra odd-word-out questions.
+CATEGORIES = {
+    "loại quả": ["táo", "cam", "chuối", "xoài", "nho", "dưa hấu", "ổi", "mít"],
+    "con vật sống dưới nước": ["cá chép", "tôm", "cua", "mực", "cá heo", "sứa"],
+    "loài chim": ["sẻ", "bồ câu", "đại bàng", "cú mèo", "chim sáo", "vẹt"],
+    "màu sắc": ["đỏ", "xanh lá", "vàng", "tím", "cam đất", "hồng"],
+    "nghề nghiệp": ["bác sĩ", "giáo viên", "kỹ sư", "nông dân", "thợ điện", "phi công"],
+    "phương tiện giao thông": ["xe đạp", "ô tô", "tàu hỏa", "máy bay", "xe buýt", "thuyền"],
+    "đồ dùng học tập": ["bút bi", "thước kẻ", "tẩy", "vở", "com-pa", "hộp bút"],
+    "bộ phận cơ thể": ["tay", "chân", "mắt", "tai", "vai", "đầu gối"],
+    "đồ dùng nhà bếp": ["nồi", "chảo", "đũa", "bát", "thớt", "muôi"],
+    "nhạc cụ": ["đàn bầu", "sáo trúc", "trống", "đàn tranh", "piano", "kèn"],
+    "môn thể thao": ["bóng đá", "cầu lông", "bơi lội", "cờ vua", "bóng rổ", "điền kinh"],
+}

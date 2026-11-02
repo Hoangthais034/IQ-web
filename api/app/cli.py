@@ -1,5 +1,6 @@
 """Question bank commands.
 
+  python -m app.cli seed                            # initial bank, ~100 per type, only if the bank is empty
   python -m app.cli generate --count 300            # code generators -> DB (approved)
   python -m app.cli import questions.json           # e.g. output of the Claude skill -> DB (pending)
   python -m app.cli import questions.json --approve # skip review
@@ -42,13 +43,26 @@ def main(argv: list[str] | None = None) -> int:
     g = sub.add_parser("generate")
     g.add_argument("--count", type=int, default=300)
     g.add_argument("--seed", type=int)
+    seed = sub.add_parser("seed")
+    seed.add_argument("--force", action="store_true", help="seed even if questions exist")
     imp = sub.add_parser("import")
     imp.add_argument("file")
     imp.add_argument("--approve", action="store_true")
     imp.add_argument("--dry-run", action="store_true", help="validate only, write nothing")
     args = p.parse_args(argv)
 
-    if args.cmd == "generate":
+    if args.cmd == "seed":
+        from sqlalchemy import func, select
+
+        from app.seed.build import initial_bank
+
+        with SessionLocal() as db:
+            existing = db.scalar(select(func.count(Question.id)))
+        if existing and not args.force:
+            print(f"bank already has {existing} question(s), skipping seed")
+            return 0
+        n, errors = save(initial_bank(), QuestionStatus.approved)
+    elif args.cmd == "generate":
         rng = random.Random(args.seed)
         gens = list(GENERATORS.values())
         items = [gens[i % len(gens)](rng) for i in range(args.count)]
