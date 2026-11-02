@@ -8,6 +8,7 @@ from typing import Annotated
 import jwt
 from fastapi import Depends, Header, HTTPException, status
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
@@ -32,7 +33,7 @@ def _decode(authorization: str | None) -> dict | None:
 
 
 def optional_user(
-    db: Annotated[Session, Depends(get_db)],
+    db: Annotated[Session, Depends(get_db, scope="function")],
     authorization: Annotated[str | None, Header()] = None,
 ) -> User | None:
     claims = _decode(authorization)
@@ -40,12 +41,22 @@ def optional_user(
         return None
     email = claims["sub"].lower()
     user = db.scalar(select(User).where(User.email == email))
+    name = claims.get("name") or (user.name if user else None)
+    picture = claims.get("picture") or (user.avatar_url if user else None)
     if user is None:
-        user = User(email=email)
+        user = User(email=email, name=name, avatar_url=picture)
         db.add(user)
-    user.name = claims.get("name") or user.name
-    user.avatar_url = claims.get("picture") or user.avatar_url
-    db.commit()
+        try:
+            db.commit()
+        except IntegrityError:  # two first requests from the same new user raced
+            db.rollback()
+            user = db.scalar(select(User).where(User.email == email))
+    elif (user.name, user.avatar_url) != (name, picture):
+        # only write when the Google profile changed, not on every request
+        user.name, user.avatar_url = name, picture
+        db.commit()
+    else:
+        db.commit()  # end the read transaction so the connection goes back to the pool before the endpoint runs
     return user
 
 

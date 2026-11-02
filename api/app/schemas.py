@@ -2,15 +2,21 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from app.models import QuestionSource, QuestionType
+from app.svg_safety import check_svg
 
 
 class OptionIn(BaseModel):
     key: str = Field(pattern=r"^[A-H]$")
     text: str | None = None
     svg: str | None = None
+
+    @field_validator("svg")
+    @classmethod
+    def safe_svg(cls, v: str | None) -> str | None:
+        return check_svg(v) if v else v
 
     @model_validator(mode="after")
     def has_content(self):
@@ -29,6 +35,11 @@ class QuestionIn(BaseModel):
     explanation: str = Field(min_length=3)
     tip_slug: str | None = None
     source: QuestionSource = QuestionSource.generator
+
+    @field_validator("prompt_svg")
+    @classmethod
+    def safe_prompt_svg(cls, v: str | None) -> str | None:
+        return check_svg(v) if v else v
 
     @model_validator(mode="after")
     def answer_in_options(self):

@@ -8,14 +8,15 @@ from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
-from app import mailer
+from app import mailer, ratelimit
 from app.auth import optional_user
 from app.config import get_settings
-from app.db import SessionLocal, get_db
+from app.db import ReleaseDbRoute, SessionLocal, get_db
 from app.models import ContactMessage, User
+from app.ratelimit import ClientIp
 
 log = logging.getLogger(__name__)
-router = APIRouter(tags=["contact"])
+router = APIRouter(route_class=ReleaseDbRoute, tags=["contact"])
 
 TOPICS = {
     "gop_y": "Góp ý",
@@ -59,11 +60,16 @@ def _deliver(message_id: uuid.UUID) -> None:
 def create_contact(
     body: ContactIn,
     background: BackgroundTasks,
-    db: Annotated[Session, Depends(get_db)],
+    db: Annotated[Session, Depends(get_db, scope="function")],
     user: Annotated[User | None, Depends(optional_user)],
     x_anon_id: Annotated[str | None, Header()] = None,
+    ip: ClientIp = None,
 ) -> dict:
     s = get_settings()
+    too_many = "Bạn gửi hơi nhiều, thử lại sau 1 giờ nhé."
+    ratelimit.hit("contact", ip, limit=s.contact_max_per_hour, window_s=3600, message=too_many)
+    # global cap so rotating emails/IPs can't flood the owner's inbox
+    ratelimit.hit("contact", "*", limit=s.contact_global_per_hour, window_s=3600, message="Hệ thống đang bận, thử lại sau nhé.")
     since = datetime.now(timezone.utc) - timedelta(hours=1)
     who = [ContactMessage.email == body.email.lower()]
     if user:
@@ -72,11 +78,11 @@ def create_contact(
         who.append(ContactMessage.anon_id == x_anon_id[:64])
     recent = db.scalar(select(func.count()).select_from(ContactMessage).where(ContactMessage.created_at > since, or_(*who)))
     if recent >= s.contact_max_per_hour:
-        raise HTTPException(429, "Bạn gửi hơi nhiều, thử lại sau 1 giờ nhé.")
+        raise HTTPException(429, too_many)
     m = ContactMessage(
         user_id=user.id if user else None,
         anon_id=x_anon_id[:64] if x_anon_id else None,
-        name=body.name.strip(),
+        name=" ".join(body.name.split()),  # no CR/LF: the name goes into the email subject
         email=body.email.lower(),
         topic=body.topic,
         message=body.message.strip(),

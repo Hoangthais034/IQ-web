@@ -9,10 +9,10 @@ from sqlalchemy.orm import Session
 
 from app.auth import current_user
 from app.config import get_settings
-from app.db import get_db
+from app.db import ReleaseDbRoute, get_db
 from app.models import Attempt, Subscription, User
 
-router = APIRouter(prefix="/me", tags=["me"])
+router = APIRouter(route_class=ReleaseDbRoute, prefix="/me", tags=["me"])
 
 
 class MeOut(BaseModel):
@@ -25,7 +25,7 @@ class MeOut(BaseModel):
 
 
 @router.get("", response_model=MeOut)
-def read_me(user: Annotated[User, Depends(current_user)], db: Annotated[Session, Depends(get_db)]) -> MeOut:
+def read_me(user: Annotated[User, Depends(current_user)], db: Annotated[Session, Depends(get_db, scope="function")]) -> MeOut:
     ends = db.scalar(
         select(func.max(Subscription.ends_at)).where(Subscription.user_id == user.id, Subscription.ends_at > datetime.now(timezone.utc))
     )
@@ -41,7 +41,7 @@ def read_me(user: Annotated[User, Depends(current_user)], db: Annotated[Session,
 
 @router.post("/popunder-seen", status_code=204)
 def mark_popunder_seen(
-    user: Annotated[User, Depends(current_user)], db: Annotated[Session, Depends(get_db)]
+    user: Annotated[User, Depends(current_user)], db: Annotated[Session, Depends(get_db, scope="function")]
 ) -> None:
     user.popunder_seen_at = datetime.now(timezone.utc)
     db.add(user)
@@ -60,7 +60,7 @@ class ClaimOut(BaseModel):
 def claim_anonymous_attempts(
     body: ClaimIn,
     user: Annotated[User, Depends(current_user)],
-    db: Annotated[Session, Depends(get_db)],
+    db: Annotated[Session, Depends(get_db, scope="function")],
 ) -> ClaimOut:
     """Attach attempts made before login to this account.
 

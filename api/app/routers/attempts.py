@@ -1,4 +1,6 @@
 import random
+import threading
+import time
 import uuid
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
@@ -9,16 +11,17 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app import scoring
+from app import ratelimit, scoring
 from app.auth import optional_user
-from app.db import get_db
+from app.db import ReleaseDbRoute, get_db
 from app.models import Attempt, AttemptAnswer, Question, QuestionStatus, QuestionType, Subscription, User
+from app.ratelimit import ClientIp
 from app.schemas import Mode
 
-router = APIRouter(prefix="/attempts", tags=["attempts"])
+router = APIRouter(route_class=ReleaseDbRoute, prefix="/attempts", tags=["attempts"])
 
 UserDep = Annotated[User | None, Depends(optional_user)]
-DbDep = Annotated[Session, Depends(get_db)]
+DbDep = Annotated[Session, Depends(get_db, scope="function")]
 AnonDep = Annotated[uuid.UUID | None, Header(alias="X-Anon-Id")]
 
 
@@ -142,27 +145,53 @@ def _expired(a: Attempt) -> bool:
     return a.deadline_at is not None and now() > a.deadline_at + timedelta(seconds=5)
 
 
+_INDEX_TTL_S = 60
+_index_lock = threading.Lock()
+_index: tuple[float, dict[QuestionType, list[uuid.UUID]]] | None = None
+
+
+def _approved_index(db: Session) -> dict[QuestionType, list[uuid.UUID]]:
+    """Approved question ids by type, cached briefly so starting a test doesn't load the whole bank."""
+    global _index
+    with _index_lock:
+        if _index and time.monotonic() - _index[0] < _INDEX_TTL_S:
+            return _index[1]
+    by_type: dict[QuestionType, list[uuid.UUID]] = defaultdict(list)
+    for qid, qtype in db.execute(select(Question.id, Question.type).where(Question.status == QuestionStatus.approved)):
+        by_type[qtype].append(qid)
+    with _index_lock:
+        _index = (time.monotonic(), dict(by_type))
+    return _index[1]
+
+
+def invalidate_question_index() -> None:
+    global _index
+    with _index_lock:
+        _index = None
+
+
 def _pick_questions(db: Session, mode: str, qtype: QuestionType | None) -> list[Question]:
-    approved = select(Question).where(Question.status == QuestionStatus.approved)
+    index = _approved_index(db)
     if mode == "practice":
         if qtype is None:
             raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "question_type required for practice")
-        pool = list(db.scalars(approved.where(Question.type == qtype)))
-        return random.sample(pool, min(scoring.PRACTICE_SIZE, len(pool)))
-
-    pool = list(db.scalars(approved))
-    by_type: dict[QuestionType, list[Question]] = defaultdict(list)
-    for q in pool:
-        by_type[q.type].append(q)
-    for qs in by_type.values():
-        random.shuffle(qs)
-    picked: list[Question] = []
-    # round-robin over types so the test is balanced, then order by difficulty
-    while len(picked) < scoring.FULL_TEST_SIZE and any(by_type.values()):
-        for qs in by_type.values():
-            if qs and len(picked) < scoring.FULL_TEST_SIZE:
-                picked.append(qs.pop())
-    picked.sort(key=lambda q: q.difficulty)
+        pool = index.get(qtype, [])
+        ids = random.sample(pool, min(scoring.PRACTICE_SIZE, len(pool)))
+    else:
+        by_type = {t: random.sample(v, len(v)) for t, v in index.items()}
+        ids = []
+        # round-robin over types so the test is balanced
+        while len(ids) < scoring.FULL_TEST_SIZE and any(by_type.values()):
+            for qs in by_type.values():
+                if qs and len(ids) < scoring.FULL_TEST_SIZE:
+                    ids.append(qs.pop())
+    if not ids:
+        return []
+    picked = list(db.scalars(select(Question).where(Question.id.in_(ids), Question.status == QuestionStatus.approved)))
+    if mode == "practice":
+        random.shuffle(picked)
+    else:
+        picked.sort(key=lambda q: q.difficulty)
     return picked
 
 
@@ -192,7 +221,8 @@ def _attempt_out(db: Session, a: Attempt) -> AttemptOut:
 # ---------- routes ----------
 
 @router.post("", response_model=AttemptOut, status_code=201)
-def start_attempt(body: StartIn, db: DbDep, user: UserDep, anon: AnonDep = None) -> AttemptOut:
+def start_attempt(body: StartIn, db: DbDep, user: UserDep, anon: AnonDep = None, ip: ClientIp = None) -> AttemptOut:
+    ratelimit.hit("attempt", ip, limit=60, window_s=3600, message="Bạn bắt đầu quá nhiều bài, thử lại sau ít phút nhé.")
     if user is None and anon is None:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "X-Anon-Id required when not logged in")
     questions = _pick_questions(db, body.mode, body.question_type)
@@ -226,13 +256,16 @@ def answer(attempt_id: uuid.UUID, position: int, body: AnswerIn, db: DbDep, user
     a = _get_owned(db, attempt_id, user, anon)
     if a.submitted_at is not None or _expired(a):
         raise HTTPException(status.HTTP_409_CONFLICT, "Attempt is closed")
-    row = next((x for x in a.answers if x.position == position), None)
+    # hot path (40 calls per test): load one answer row and only the columns needed, not the whole attempt
+    row = db.get(AttemptAnswer, (a.id, position))
     if row is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Question not found")
     if a.mode == "practice" and row.chosen_key is not None:
         raise HTTPException(status.HTTP_409_CONFLICT, "Already answered")
     row.chosen_key = _shown_to_real(row.option_order, body.key)
-    q = db.get(Question, row.question_id)
+    q = db.execute(
+        select(Question.answer_key, Question.explanation, Question.tip_slug).where(Question.id == row.question_id)
+    ).one()
     row.is_correct = row.chosen_key == q.answer_key
     db.commit()
     if a.mode == "practice":

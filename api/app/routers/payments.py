@@ -13,11 +13,11 @@ from sqlalchemy.orm import Session
 
 from app.auth import current_user
 from app.config import get_settings
-from app.db import get_db
+from app.db import ReleaseDbRoute, get_db
 from app.models import Payment, Subscription, UnmatchedTransaction, User
 
-router = APIRouter(tags=["payments"])
-DbDep = Annotated[Session, Depends(get_db)]
+router = APIRouter(route_class=ReleaseDbRoute, tags=["payments"])
+DbDep = Annotated[Session, Depends(get_db, scope="function")]
 UserDep = Annotated[User, Depends(current_user)]
 
 CODE_PREFIX = "IQ"

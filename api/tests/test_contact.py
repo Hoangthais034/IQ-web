@@ -41,3 +41,14 @@ def test_admin_lists_contact_messages():
         assert client.get("/admin/contact-messages", headers={"Authorization": f"Bearer {token('x@example.com')}"}).status_code == 403
     finally:
         s.admin_emails = old
+
+
+def test_contact_ip_limit_and_newlines(monkeypatch):
+    monkeypatch.setattr(mailer, "smtp_configured", lambda: False)
+    monkeypatch.setattr(get_settings(), "contact_max_per_hour", 2)
+    hdr = {"X-Client-Ip": "203.0.113.9"}
+    for i in range(2):
+        body = {"name": "A\r\nBcc: x@evil.test", "email": f"r{i}-{uuid.uuid4()}@example.com", "topic": "khac", "message": "x" * 20}
+        assert client.post("/contact", json=body, headers=hdr).status_code == 201
+    body["email"] = f"new-{uuid.uuid4()}@example.com"  # rotating emails doesn't bypass the IP limit
+    assert client.post("/contact", json=body, headers=hdr).status_code == 429

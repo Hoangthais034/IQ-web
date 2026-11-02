@@ -7,14 +7,15 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.auth import admin_user
-from app.db import get_db
+from app.db import ReleaseDbRoute, get_db
 from datetime import datetime, timezone
 
 from app.models import ContactMessage, Payment, Question, QuestionStatus, UnmatchedTransaction, User
+from app.routers.attempts import invalidate_question_index
 from app.routers.payments import grant_subscription
 
-router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(admin_user)])
-DbDep = Annotated[Session, Depends(get_db)]
+router = APIRouter(route_class=ReleaseDbRoute, prefix="/admin", tags=["admin"], dependencies=[Depends(admin_user)])
+DbDep = Annotated[Session, Depends(get_db, scope="function")]
 
 
 class AdminQuestion(BaseModel):
@@ -47,6 +48,7 @@ def set_status(question_id: uuid.UUID, body: StatusIn, db: DbDep, _: Annotated[U
         raise HTTPException(404, "Question not found")
     q.status = body.status
     db.commit()
+    invalidate_question_index()
 
 
 class UnmatchedOut(BaseModel):

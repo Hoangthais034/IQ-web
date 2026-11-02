@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     database_url: str = "postgresql+psycopg://iq:iq@localhost:5432/iq"
+    app_env: str = "development"
     api_jwt_secret: str = "change-me"
     admin_emails: str = ""
     cors_origins: str = "http://localhost:3000"
@@ -26,6 +27,7 @@ class Settings(BaseSettings):
     smtp_password: str = ""
     smtp_from: str = ""  # defaults to smtp_username
     contact_max_per_hour: int = 3
+    contact_global_per_hour: int = 60
 
     @property
     def admin_email_set(self) -> set[str]:
