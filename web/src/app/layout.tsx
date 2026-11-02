@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
 import Link from "next/link";
 
-import { AdsProvider, PopunderOnce } from "@/components/ads";
+import { AdsProvider, Popunder } from "@/components/ads";
 import { getMe } from "@/lib/me";
 
 import "./globals.css";
@@ -38,7 +38,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             </nav>
           </header>
           {children}
-          <PopunderOnce loggedIn={!!me} serverSeenAt={me?.popunder_seen_at ?? null} />
+          <Popunder loggedIn={!!me} serverSeenAt={me?.popunder_seen_at ?? null} />
         </AdsProvider>
       </body>
     </html>

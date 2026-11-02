@@ -50,7 +50,7 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
         <p className="mt-1 text-xs text-neutral-400">Chỉ mang tính tham khảo, không phải bài test IQ chuẩn hóa.</p>
       </section>
 
-      <AdSlot kind="banner" />
+      <AdSlot />
 
       <section>
         <h2 className="mb-3 text-lg font-semibold">Theo dạng đề</h2>

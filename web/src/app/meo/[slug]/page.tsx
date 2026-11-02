@@ -25,7 +25,7 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
         <p className="mt-3 text-neutral-700">{tip.intro}</p>
       </header>
 
-      <AdSlot kind="banner" />
+      <AdSlot />
 
       <section>
         <h2 className="mb-2 text-xl font-semibold">Nhận ra dạng đề</h2>
@@ -59,7 +59,7 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
         </form>
       )}
 
-      <AdSlot kind="native" />
+      <AdSlot />
     </main>
   );
 }

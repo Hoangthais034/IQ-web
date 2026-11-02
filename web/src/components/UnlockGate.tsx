@@ -53,8 +53,8 @@ export function UnlockGate({ attemptId }: { attemptId: string }) {
         </div>
       ) : (
         <div className="space-y-3">
-          <AdSlot kind="native" className="my-0" />
-          <AdSlot kind="banner" className="my-0" />
+          
+          <AdSlot className="my-0" />
           <button
             onClick={reveal}
             disabled={left > 0 || pending}
