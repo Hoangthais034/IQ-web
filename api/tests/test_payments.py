@@ -49,4 +49,25 @@ def test_underpaid_or_unknown_ignored():
     tx = {"id": int(uuid.uuid4().int % 10**9), "transferType": "in", "transferAmount": 10000, "content": p["order_code"]}
     assert hook(tx).json() == {"success": True}
     assert client.get(f"/payments/{p['order_code']}", headers=auth).json()["status"] == "pending"
-    assert hook({"id": 1, "transferType": "in", "transferAmount": 30000, "content": "random"}).json() == {"success": True}
+    assert hook({"id": int(uuid.uuid4().int % 10**9), "transferType": "in", "transferAmount": 30000, "content": "random"}).json() == {"success": True}
+
+
+def test_unmatched_transfer_kept_and_resolved_by_admin(monkeypatch):
+    admin_email = f"admin-{uuid.uuid4()}@example.com"
+    monkeypatch.setattr(get_settings(), "admin_emails", admin_email)
+    admin = {"Authorization": f"Bearer {token(admin_email)}"}
+    buyer_email = f"forgot-{uuid.uuid4()}@example.com"
+    buyer = {"Authorization": f"Bearer {token(buyer_email)}"}
+    client.get("/me", headers=buyer)
+
+    content = f"chuyen tien goi thang {uuid.uuid4().hex[:6]}"
+    assert hook({"id": int(uuid.uuid4().int % 10**9), "transferType": "in", "transferAmount": 30000, "content": content}).json() == {"success": True}
+    rows = client.get("/admin/transactions/unmatched", headers=admin).json()
+    tx = next(r for r in rows if r["content"] == content)
+    assert tx["reason"] == "no_code"
+
+    assert client.post(f"/admin/transactions/{tx['id']}/resolve", json={"email": buyer_email}, headers=admin).status_code == 204
+    assert client.get("/me", headers=buyer).json()["subscription_ends_at"] is not None
+    assert all(r["id"] != tx["id"] for r in client.get("/admin/transactions/unmatched", headers=admin).json())
+    # non-admin cannot see the list
+    assert client.get("/admin/transactions/unmatched", headers=buyer).status_code == 403

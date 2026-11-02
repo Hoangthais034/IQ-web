@@ -117,3 +117,18 @@ class Payment(Base):
     provider_ref: Mapped[str | None] = mapped_column(String(100), unique=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+class UnmatchedTransaction(Base):
+    """Incoming transfers SePay reported that did not activate anything (no/unknown code, underpaid)."""
+
+    __tablename__ = "unmatched_transactions"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    provider_ref: Mapped[str] = mapped_column(String(100), unique=True)
+    amount_vnd: Mapped[int] = mapped_column(Integer)
+    content: Mapped[str] = mapped_column(Text)
+    reason: Mapped[str] = mapped_column(String(30))  # no_code | unknown_code | underpaid | already_paid
+    received_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    resolved_user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"))

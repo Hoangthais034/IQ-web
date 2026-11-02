@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from app.auth import current_user
 from app.config import get_settings
 from app.db import get_db
-from app.models import Payment, Subscription, User
+from app.models import Payment, Subscription, UnmatchedTransaction, User
 
 router = APIRouter(tags=["payments"])
 DbDep = Annotated[Session, Depends(get_db)]
@@ -102,22 +102,34 @@ def sepay_webhook(body: SepayIn, db: DbDep, authorization: Annotated[str | None,
     ok = {"success": True}
     if body.transferType != "in":
         return ok
+    ref = str(body.id)
+    if db.scalar(select(Payment.id).where(Payment.provider_ref == ref)):
+        return ok  # replayed webhook for a transaction we already used
     text = f"{body.code or ''} {body.content}".upper().replace(" ", "")
     m = CODE_RE.search(text)
-    if not m:
-        return ok
-    p = db.scalar(select(Payment).where(Payment.order_code == m.group(0)).with_for_update())
-    # unknown code, already paid (replayed webhook) or underpaid: acknowledge and ignore
-    if p is None or p.status == "paid" or body.transferAmount < p.amount_vnd:
-        return ok
-    p.status = "paid"
-    p.paid_at = now()
-    p.provider_ref = str(body.id)
-    current_end = db.scalar(select(func.max(Subscription.ends_at)).where(Subscription.user_id == p.user_id))
-    start = max(now(), current_end) if current_end else now()
-    db.add(Subscription(user_id=p.user_id, starts_at=start, ends_at=start + timedelta(days=get_settings().subscription_days), payment_id=p.id))
+    p = db.scalar(select(Payment).where(Payment.order_code == m.group(0)).with_for_update()) if m else None
+    reason = (
+        "no_code" if not m else "unknown_code" if p is None
+        else "already_paid" if p.status == "paid" else "underpaid" if body.transferAmount < p.amount_vnd else None
+    )
+    if reason:
+        # keep it for manual review in /admin instead of dropping the money on the floor
+        db.add(UnmatchedTransaction(provider_ref=ref, amount_vnd=body.transferAmount, content=body.content, reason=reason))
+    else:
+        p.status = "paid"
+        p.paid_at = now()
+        p.provider_ref = ref
+        grant_subscription(db, p)
     try:
         db.commit()
-    except IntegrityError:  # same SePay transaction id processed concurrently
+    except IntegrityError:  # same SePay transaction id processed twice concurrently
         db.rollback()
     return ok
+
+
+def grant_subscription(db: Session, p: Payment) -> Subscription:
+    current_end = db.scalar(select(func.max(Subscription.ends_at)).where(Subscription.user_id == p.user_id))
+    start = max(now(), current_end) if current_end else now()
+    sub = Subscription(user_id=p.user_id, starts_at=start, ends_at=start + timedelta(days=get_settings().subscription_days), payment_id=p.id)
+    db.add(sub)
+    return sub
