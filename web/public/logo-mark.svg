@@ -1,45 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="45%" r="70%">
+    <radialGradient id="bg" cx="50%" cy="40%" r="75%">
       <stop offset="0" stop-color="#2a0d10"/><stop offset="1" stop-color="#0b0607"/>
     </radialGradient>
-    <radialGradient id="iris" cx="50%" cy="50%" r="50%">
-      <stop offset="0" stop-color="#ffd27a"/><stop offset=".55" stop-color="#d4a017"/><stop offset="1" stop-color="#7a4a06"/>
+    <linearGradient id="sack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#cdb184"/><stop offset="1" stop-color="#8a6a3e"/>
+    </linearGradient>
+    <radialGradient id="brain" cx="50%" cy="60%" r="60%">
+      <stop offset="0" stop-color="#ffe6a8"/><stop offset=".6" stop-color="#e0a83a"/><stop offset="1" stop-color="#8a4f0a"/>
     </radialGradient>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
+    <pattern id="weave" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M0 5h10M5 0v10" stroke="#6d5130" stroke-width="1" opacity=".35"/>
+    </pattern>
   </defs>
   <rect width="512" height="512" rx="96" fill="url(#bg)"/>
   <!-- broken halo -->
-  <g fill="none" stroke="#c9a24a" stroke-width="6" stroke-linecap="square">
-    <path d="M256 56 A200 200 0 0 1 452 236"/>
-    <path d="M444 300 A200 200 0 0 1 330 442"/>
-    <path d="M140 418 A200 200 0 0 1 200 64"/>
+  <g fill="none" stroke="#c9a24a" stroke-width="6">
+    <path d="M300 52 A206 206 0 0 1 458 300"/>
+    <path d="M430 372 A206 206 0 0 1 120 410"/>
+    <path d="M70 330 A206 206 0 0 1 212 52"/>
   </g>
-  <g fill="#c9a24a">
-    <path d="M256 40 l10 16 -10 16 -10 -16z"/>
-    <path d="M472 256 l-16 10 -16 -10 16 -10z" transform="rotate(-8 456 256)"/>
-    <path d="M180 436 l18 -4 4 18 -18 4z"/>
+  <path d="M256 30 l12 20 -12 20 -12 -20z" fill="#c9a24a"/>
+  <!-- straw strands behind head -->
+  <g stroke="#d9b54e" stroke-width="5" stroke-linecap="round">
+    <path d="M150 300 L96 330"/><path d="M150 320 L104 366"/><path d="M160 336 L130 392"/>
+    <path d="M362 300 L416 330"/><path d="M362 320 L408 366"/><path d="M352 336 L382 392"/>
+    <path d="M220 380 L210 440"/><path d="M256 384 L256 452"/><path d="M292 380 L302 440"/>
   </g>
-  <!-- 3x3 matrix, last cell missing -->
-  <g fill="#e8dcc8" stroke="#0b0607" stroke-width="4">
-    <rect x="146" y="146" width="62" height="62"/>
-    <rect x="225" y="146" width="62" height="62" fill="#9b1b22"/>
-    <rect x="304" y="146" width="62" height="62"/>
-    <rect x="146" y="225" width="62" height="62" fill="#9b1b22"/>
-    <rect x="225" y="225" width="62" height="62"/>
-    <rect x="304" y="225" width="62" height="62" fill="#9b1b22"/>
-    <rect x="146" y="304" width="62" height="62"/>
-    <rect x="225" y="304" width="62" height="62" fill="#9b1b22"/>
+  <!-- sack head -->
+  <path d="M168 196 Q150 300 186 360 Q256 400 326 360 Q362 300 344 196 Z" fill="url(#sack)" stroke="#2b1a10" stroke-width="5"/>
+  <path d="M168 196 Q150 300 186 360 Q256 400 326 360 Q362 300 344 196 Z" fill="url(#weave)"/>
+  <!-- rope tie at neck -->
+  <path d="M184 352 Q256 380 328 352" fill="none" stroke="#5a3a1a" stroke-width="10" stroke-linecap="round"/>
+  <!-- open torn top: brain glowing inside -->
+  <path d="M168 196 L184 176 L200 192 L218 170 L238 188 L256 166 L274 188 L294 170 L312 192 L328 176 L344 196 Q256 214 168 196Z" fill="#1a0b08" stroke="#2b1a10" stroke-width="4"/>
+  <g filter="url(#glow)">
+    <path d="M196 188 Q192 128 240 118 Q256 98 276 116 Q322 120 318 186 Q256 200 196 188Z" fill="url(#brain)" stroke="#7a3e08" stroke-width="4"/>
+    <path d="M256 112 Q250 150 258 192" fill="none" stroke="#7a3e08" stroke-width="4"/>
+    <path d="M214 156 Q230 146 240 160 M276 146 Q290 134 302 152 M222 178 Q236 168 246 180 M270 172 Q286 164 300 176" fill="none" stroke="#9a560f" stroke-width="3.5" stroke-linecap="round"/>
   </g>
-  <!-- the eye in the empty cell -->
-  <g transform="translate(335 335)" filter="url(#glow)">
-    <path d="M-58 0 Q0 -46 58 0 Q0 46 -58 0Z" fill="#0b0607" stroke="#d63a2f" stroke-width="5"/>
-    <circle r="22" fill="url(#iris)"/>
-    <path d="M0 -18 L5 0 0 18 -5 0Z" fill="#0b0607"/>
+  <!-- eyes: one stitched X, one glowing -->
+  <g stroke="#2b1a10" stroke-width="7" stroke-linecap="round">
+    <path d="M200 246 L232 274 M232 246 L200 274"/>
   </g>
-  <!-- crack -->
-  <path d="M287 146 L300 118 L292 96 L310 70" fill="none" stroke="#d63a2f" stroke-width="4"/>
-  <path d="M146 287 L118 296 L100 284 L74 300" fill="none" stroke="#d63a2f" stroke-width="4"/>
+  <g filter="url(#glow)">
+    <circle cx="300" cy="260" r="20" fill="#0b0607" stroke="#d63a2f" stroke-width="5"/>
+    <circle cx="300" cy="260" r="8" fill="#ffd27a"/>
+  </g>
+  <!-- stitched mouth -->
+  <path d="M206 318 Q256 338 306 318" fill="none" stroke="#2b1a10" stroke-width="5"/>
+  <g stroke="#2b1a10" stroke-width="4" stroke-linecap="round">
+    <path d="M216 312 L214 330"/><path d="M234 318 L233 336"/><path d="M256 320 L256 338"/><path d="M278 318 L279 336"/><path d="M296 312 L298 330"/>
+  </g>
+  <!-- seam crack in red -->
+  <path d="M330 220 L318 244 L332 262 L322 288" fill="none" stroke="#9b1b22" stroke-width="4"/>
 </svg>
