@@ -12,8 +12,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      # Data lives in a subfolder so a mount point's lost+found never blocks initdb.
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - db-data:/var/lib/postgresql/data
+      # Bind mount on the host: survives redeploys and can be backed up by copying the folder.
+      - ${DB_DATA_DIR:-/mnt/iq-web/postgres}:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
@@ -81,5 +84,3 @@ services:
     expose:
       - "3000"
 
-volumes:
-  db-data:
