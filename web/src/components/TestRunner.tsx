@@ -54,11 +54,11 @@ export function TestRunner({ attempt }: { attempt: Attempt }) {
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-6">
-      <header className="mb-6 flex items-center justify-between text-sm text-neutral-600">
+      <header className="mb-6 flex items-center justify-between text-sm text-muted">
         <span>
           Câu {index + 1}/{total} · đã làm {answered}
         </span>
-        {mm && <span className={`font-mono text-base ${left! < 60 ? "text-red-600" : ""}`}>{mm}</span>}
+        {mm && <span className={`font-mono text-base ${left! < 60 ? "text-danger" : "text-ink"}`}>{mm}</span>}
       </header>
 
       <QuestionView
@@ -70,11 +70,11 @@ export function TestRunner({ attempt }: { attempt: Attempt }) {
       />
 
       {fb && (
-        <div className={`mt-5 rounded-lg p-4 ${fb.is_correct ? "bg-green-50" : "bg-red-50"}`}>
+        <div className={`mt-5 rounded-2xl border p-4 ${fb.is_correct ? "border-success bg-success-soft" : "border-danger bg-danger-soft"}`}>
           <p className="font-medium">{fb.is_correct ? "Chính xác!" : `Chưa đúng. Đáp án là ${fb.correct_key}.`}</p>
-          <p className="mt-1 text-neutral-700">{fb.explanation}</p>
+          <p className="mt-1 text-ink">{fb.explanation}</p>
           {fb.tip_slug && (
-            <Link href={`/meo/${fb.tip_slug}`} className="mt-2 inline-block text-sm underline">
+            <Link href={`/meo/${fb.tip_slug}`} className="mt-2 inline-block text-sm font-semibold text-brand-800 underline">
               Xem mẹo cho dạng này
             </Link>
           )}
@@ -83,19 +83,19 @@ export function TestRunner({ attempt }: { attempt: Attempt }) {
 
       <nav className="mt-8 flex items-center justify-between gap-3">
         <button
-          className="rounded-lg border px-4 py-2 disabled:opacity-40"
+          className="btn btn-outline"
           disabled={index === 0}
           onClick={() => setIndex(index - 1)}
         >
           Câu trước
         </button>
         {index < total - 1 ? (
-          <button className="rounded-lg border px-4 py-2" onClick={() => setIndex(index + 1)}>
+          <button className="btn btn-outline" onClick={() => setIndex(index + 1)}>
             {answers[q.position] ? "Câu tiếp" : "Bỏ qua"}
           </button>
         ) : (
           <button
-            className="rounded-lg bg-neutral-900 px-5 py-2 font-medium text-white disabled:opacity-50"
+            className="btn btn-primary"
             disabled={pending}
             onClick={() => {
               const missing = total - answered;
@@ -113,9 +113,11 @@ export function TestRunner({ attempt }: { attempt: Attempt }) {
           <button
             key={x.position}
             onClick={() => setIndex(i)}
-            className={`h-8 w-8 rounded text-xs ${i === index ? "ring-2 ring-neutral-900" : ""} ${
-              answers[x.position] ? "bg-neutral-800 text-white" : "bg-neutral-100"
-            }`}
+            aria-label={`Câu ${i + 1}`}
+            aria-current={i === index ? "step" : undefined}
+            className={`h-9 w-9 rounded-lg text-xs font-semibold transition-colors ${
+              i === index ? "ring-2 ring-brand-800 ring-offset-1" : ""
+            } ${answers[x.position] ? "bg-brand-600 text-white hover:bg-brand-800" : "border border-line-strong bg-white text-muted hover:bg-brand-soft"}`}
           >
             {i + 1}
           </button>

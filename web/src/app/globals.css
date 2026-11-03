@@ -1,19 +1,109 @@
 @import "tailwindcss";
 
-/* The UI is designed for a light background only: component colors (text-neutral-*, bg-neutral-*) are
-   fixed, so following the OS dark mode made body text near-invisible. Keep the page light. */
+/* Brand tokens: see the "Test IQ" design system (colors, states, spacing). Light theme only. */
 :root {
   color-scheme: light;
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1f2a44;
+  --focus-ring: #1f4aa8;
+  --shadow-card: 0 1px 2px rgba(31, 42, 68, 0.06), 0 4px 12px rgba(31, 42, 68, 0.06);
+  --shadow-hover: 0 2px 4px rgba(31, 42, 68, 0.08), 0 10px 24px rgba(31, 42, 68, 0.14);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand: #4f8cff;
+  --color-brand-600: #2f6bea;
+  --color-brand-700: #2559c9;
+  --color-brand-800: #1f4aa8;
+  --color-brand-soft: #eaf1ff;
+  --color-teal: #22c3a6;
+  --color-teal-700: #0d7d6c;
+  --color-teal-soft: #e3f8f4;
+  --color-sun: #ffb703;
+  --color-sun-soft: #fff4d6;
+  --color-sun-ink: #7a4d00;
+  --color-ink: #1f2a44;
+  --color-muted: #4b5873;
+  --color-subtle: #66728a;
+  --color-sunken: #f5f8fc;
+  --color-line: #dbe3ef;
+  --color-line-strong: #8493ad;
+  --color-success: #0c7a54;
+  --color-success-soft: #e3f6ee;
+  --color-danger: #c62f3f;
+  --color-danger-soft: #fde8ea;
+  --color-disabled: #e3e9f3;
+  --color-disabled-ink: #556079;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
+html { scroll-behavior: smooth; }
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+
+body { background: var(--background); color: var(--foreground); }
+
+/* Interaction rules shared by every control (see design system README, "Trạng thái"). */
+@layer base {
+  a, button, summary, label[for], select, [role="button"] { cursor: pointer; }
+  button:disabled, [aria-disabled="true"], input:disabled, select:disabled, textarea:disabled { cursor: not-allowed; }
+  :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-radius: 6px; }
+  input:focus-visible, textarea:focus-visible, select:focus-visible { outline-offset: 0; border-radius: 12px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+}
+
+/* Component classes: one definition per state so every page behaves the same. */
+@layer components {
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    min-height: 44px; padding: 0.625rem 1.25rem; border-radius: 12px; border: 1px solid transparent;
+    font-weight: 600; line-height: 1.25; text-align: center; user-select: none;
+    transition: background-color .15s, border-color .15s, box-shadow .15s, transform .08s, color .15s;
+  }
+  .btn:active:not(:disabled):not([aria-disabled="true"]) { transform: translateY(1px); box-shadow: none; }
+  .btn:disabled, .btn[aria-disabled="true"] { background: var(--color-disabled); color: var(--color-disabled-ink); border-color: transparent; box-shadow: none; }
+  .btn-primary { background: var(--color-brand-600); color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: var(--color-brand-800); box-shadow: 0 6px 16px rgba(47, 107, 234, 0.35); }
+  .btn-primary:active:not(:disabled) { background: var(--color-brand-800); }
+  .btn-outline { background: #fff; color: var(--color-ink); border-color: var(--color-line-strong); }
+  .btn-outline:hover:not(:disabled) { background: var(--color-brand-soft); border-color: var(--color-brand-600); color: var(--color-brand-800); }
+  .btn-soft { background: transparent; color: var(--color-brand-700); }
+  .btn-soft:hover:not(:disabled) { background: var(--color-brand-soft); }
+  .btn-danger { background: var(--color-danger); color: #fff; }
+  .btn-danger:hover:not(:disabled) { background: #a3222f; }
+  .btn-light { background: #fff; color: var(--color-brand-800); }
+  .btn-light:hover:not(:disabled) { background: var(--color-brand-soft); box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+  .btn.is-loading { pointer-events: none; opacity: .9; }
+
+  .field {
+    width: 100%; min-height: 44px; padding: 0.625rem 0.875rem; border-radius: 12px; background: #fff; color: var(--color-ink);
+    border: 1px solid var(--color-line-strong); transition: border-color .15s, box-shadow .15s;
+  }
+  .field::placeholder { color: var(--color-subtle); }
+  .field:hover:not(:disabled) { border-color: var(--color-brand-600); }
+  .field:focus { border-color: var(--color-brand-800); box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.28); }
+  .field[aria-invalid="true"] { border-color: var(--color-danger); }
+  .field:disabled { background: var(--color-disabled); color: var(--color-disabled-ink); border-color: var(--color-line); }
+
+  .card { background: #fff; border: 1px solid var(--color-line); border-radius: 16px; box-shadow: var(--shadow-card); }
+  .card-link { transition: transform .15s, box-shadow .15s, border-color .15s; }
+  .card-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); border-color: var(--color-brand); }
+  .card-link:active { transform: translateY(0); }
+
+  .option {
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 12px; text-align: left;
+    background: #fff; border: 2px solid var(--color-line); transition: border-color .15s, background-color .15s, transform .08s, box-shadow .15s;
+  }
+  .option:hover:not(:disabled) { border-color: var(--color-brand-600); background: var(--color-brand-soft); box-shadow: var(--shadow-card); }
+  .option:active:not(:disabled) { transform: translateY(1px); }
+  .option[aria-pressed="true"] { border-color: var(--color-brand-800); background: var(--color-brand-soft); }
+  .option.is-correct { border-color: var(--color-success); background: var(--color-success-soft); }
+  .option.is-wrong { border-color: var(--color-danger); background: var(--color-danger-soft); }
+  .option:disabled { cursor: not-allowed; }
+  .option:disabled:not(.is-correct):not(.is-wrong):not([aria-pressed="true"]) { opacity: .7; }
+
+  .navlink { padding: 0.375rem 0.75rem; border-radius: 9999px; color: var(--color-muted); font-weight: 500; transition: background-color .15s, color .15s; }
+  .navlink:hover { background: var(--color-brand-soft); color: var(--color-brand-800); }
+  .navlink[aria-current="page"] { background: var(--color-brand-soft); color: var(--color-brand-800); font-weight: 600; }
 }

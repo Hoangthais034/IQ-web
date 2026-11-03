@@ -23,10 +23,10 @@ export function QuestionView({
 }) {
   return (
     <div className="space-y-5">
-      <p className="text-lg font-medium">{question.prompt}</p>
+      <p className="text-lg font-semibold text-ink">{question.prompt}</p>
       {question.prompt_svg && (
         <div
-          className={`mx-auto w-full text-neutral-900 ${question.type === "rotation" ? "max-w-[180px]" : "max-w-xs"}`}
+          className={`mx-auto w-full text-ink ${question.type === "rotation" ? "max-w-[180px]" : "max-w-xs"}`}
           dangerouslySetInnerHTML={{ __html: question.prompt_svg }}
         />
       )}
@@ -42,24 +42,17 @@ export function QuestionView({
         {question.options.map((o) => {
           const isChosen = chosen === o.key;
           const isCorrect = correctKey === o.key;
-          const tone = correctKey
-            ? isCorrect
-              ? "border-green-600 bg-green-50"
-              : isChosen
-                ? "border-red-600 bg-red-50"
-                : "border-neutral-200"
-            : isChosen
-              ? "border-neutral-900 bg-neutral-100"
-              : "border-neutral-200 hover:border-neutral-400";
+          const tone = correctKey ? (isCorrect ? "is-correct" : isChosen ? "is-wrong" : "") : "";
           return (
             <button
               key={o.key}
               type="button"
               disabled={disabled}
               onClick={() => onChoose(o.key)}
-              className={`flex items-center gap-3 rounded-lg border-2 p-3 text-left ${tone}`}
+              aria-pressed={isChosen}
+              className={`option ${tone}`}
             >
-              <span className="text-sm font-semibold text-neutral-500">{o.key}</span>
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sunken text-sm font-bold text-brand-800">{o.key}</span>
               <OptionBody option={o} />
             </button>
           );

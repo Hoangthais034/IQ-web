@@ -37,16 +37,16 @@ export function UnlockGate({ attemptId, paymentsEnabled }: { attemptId: string; 
   }
 
   return (
-    <div className="space-y-4 rounded-xl border p-5">
-      <h2 className="text-xl font-semibold">Mở khóa kết quả</h2>
+    <div className="space-y-4 card p-5">
+      <h2 className="text-xl font-bold text-ink">Mở khóa kết quả</h2>
       {left === null ? (
         <div className="grid gap-3 sm:grid-cols-2">
-          <button onClick={watchAd} disabled={pending} className="rounded-lg bg-neutral-900 px-4 py-3 text-white">
+          <button onClick={watchAd} disabled={pending} className={`btn btn-primary ${pending ? "is-loading" : ""}`}>
             Xem quảng cáo 15 giây
           </button>
           {paymentsEnabled && <Link
             href={`/goi-thang?next=${encodeURIComponent(`/test/${attemptId}/result`)}`}
-            className="rounded-lg border px-4 py-3 text-center"
+            className="btn btn-outline"
           >
             Gói tháng 30.000đ, không quảng cáo
           </Link>}
@@ -58,13 +58,13 @@ export function UnlockGate({ attemptId, paymentsEnabled }: { attemptId: string; 
           <button
             onClick={reveal}
             disabled={left > 0 || pending}
-            className="w-full rounded-lg bg-neutral-900 px-4 py-3 text-white disabled:opacity-40"
+            className="btn btn-primary w-full"
           >
             {left > 0 ? `Xem điểm sau ${left} giây` : "Xem điểm"}
           </button>
         </div>
       )}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
     </div>
   );
 }

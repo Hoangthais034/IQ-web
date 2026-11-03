@@ -13,11 +13,12 @@ export default async function LoginPage({
 }) {
   const { next = "/", error } = await searchParams;
   return (
-    <main className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center gap-6 px-4">
-      <h1 className="text-2xl font-semibold">Đăng nhập</h1>
-      <p className="text-neutral-600">Đăng nhập bằng Google để xem điểm và lưu lịch sử làm bài.</p>
+    <main className="mx-auto flex min-h-[70dvh] max-w-sm flex-col justify-center gap-6 px-4 py-10">
+      <div className="card space-y-5 p-6">
+      <h1 className="text-2xl font-extrabold text-ink">Đăng nhập</h1>
+      <p className="text-muted">Đăng nhập bằng Google để xem điểm và lưu lịch sử làm bài.</p>
       {error && (
-        <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
+        <p role="alert" className="rounded-xl border border-danger bg-danger-soft p-3 text-sm text-danger">
           {ERRORS[error] ?? "Đăng nhập không thành công, bạn thử lại nhé."}
         </p>
       )}
@@ -27,10 +28,12 @@ export default async function LoginPage({
           await signIn("google", { redirectTo: `/auth/after-login?next=${encodeURIComponent(next)}` });
         }}
       >
-        <button className="w-full rounded-lg bg-neutral-900 px-4 py-3 font-medium text-white">
+        <button className="btn btn-primary w-full">
           Tiếp tục với Google
         </button>
       </form>
+      <p className="text-xs text-subtle">Chúng tôi chỉ dùng tên và email Google của bạn để lưu bài làm.</p>
+      </div>
     </main>
   );
 }
