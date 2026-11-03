@@ -5,6 +5,7 @@ import { startAttempt } from "@/app/test/actions";
 import { AdSlot } from "@/components/ads";
 import { UnlockGate } from "@/components/UnlockGate";
 import { apiJson } from "@/lib/api";
+import { getMe } from "@/lib/me";
 import { TYPE_LABELS, type Result } from "@/lib/types";
 
 export default async function ResultPage({ params }: { params: Promise<{ id: string }> }) {
@@ -27,9 +28,10 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
     );
   }
   if (status === 403) {
+    const me = await getMe();
     return (
       <main className="mx-auto max-w-xl px-4 py-12">
-        <UnlockGate attemptId={id} />
+        <UnlockGate attemptId={id} paymentsEnabled={!!me?.payments_enabled} />
       </main>
     );
   }

@@ -12,6 +12,7 @@ export type Me = {
   is_admin: boolean;
   popunder_seen_at: string | null;
   subscription_ends_at: string | null;
+  payments_enabled: boolean;
 };
 
 /** Current user from the API (null when logged out). Cached per request. */

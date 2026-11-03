@@ -35,7 +35,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               <span className="flex-1" />
               {me?.is_admin && <Link href="/admin">Duyệt đề</Link>}
               {me ? (
-                subscribed ? <span className="text-green-700">Gói tháng</span> : <Link href="/goi-thang">Bỏ quảng cáo</Link>
+                subscribed ? <span className="text-green-700">Gói tháng</span> : me.payments_enabled ? <Link href="/goi-thang">Bỏ quảng cáo</Link> : null
               ) : (
                 <Link href="/login">Đăng nhập</Link>
               )}

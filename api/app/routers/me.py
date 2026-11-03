@@ -22,6 +22,7 @@ class MeOut(BaseModel):
     is_admin: bool
     popunder_seen_at: datetime | None
     subscription_ends_at: datetime | None
+    payments_enabled: bool
 
 
 @router.get("", response_model=MeOut)
@@ -36,6 +37,7 @@ def read_me(user: Annotated[User, Depends(current_user)], db: Annotated[Session,
         is_admin=user.email in get_settings().admin_email_set,
         popunder_seen_at=user.popunder_seen_at,
         subscription_ends_at=ends,
+        payments_enabled=bool(get_settings().sepay_bank_account and get_settings().sepay_bank),
     )
 
 

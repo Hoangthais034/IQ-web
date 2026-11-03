@@ -8,7 +8,7 @@ import Link from "next/link";
 import { startAdGate, unlockAttempt } from "@/app/test/actions";
 import { AdSlot } from "@/components/ads";
 
-export function UnlockGate({ attemptId }: { attemptId: string }) {
+export function UnlockGate({ attemptId, paymentsEnabled }: { attemptId: string; paymentsEnabled: boolean }) {
   const router = useRouter();
   const [left, setLeft] = useState<number | null>(null);
   const [pending, startTransition] = useTransition();
@@ -44,12 +44,12 @@ export function UnlockGate({ attemptId }: { attemptId: string }) {
           <button onClick={watchAd} disabled={pending} className="rounded-lg bg-neutral-900 px-4 py-3 text-white">
             Xem quảng cáo 15 giây
           </button>
-          <Link
+          {paymentsEnabled && <Link
             href={`/goi-thang?next=${encodeURIComponent(`/test/${attemptId}/result`)}`}
             className="rounded-lg border px-4 py-3 text-center"
           >
             Gói tháng 30.000đ, không quảng cáo
-          </Link>
+          </Link>}
         </div>
       ) : (
         <div className="space-y-3">
