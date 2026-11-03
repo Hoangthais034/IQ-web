@@ -53,7 +53,7 @@ export function TestRunner({ attempt }: { attempt: Attempt }) {
   const mm = left === null ? "" : `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`;
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-6">
+    <main className="mx-auto max-w-3xl px-4 py-6">
       <header className="mb-6 flex items-center justify-between text-sm text-muted">
         <span>
           Câu {index + 1}/{total} · đã làm {answered}

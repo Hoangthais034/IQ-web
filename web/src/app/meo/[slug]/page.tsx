@@ -23,7 +23,7 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
   const type = typeForTipSlug(tip.slug);
   const meta = type ? TYPE_META[type] : null;
   return (
-    <PageShell width="max-w-3xl">
+    <PageShell>
       <div className="space-y-8">
         <header className="space-y-4">
           <Link href="/meo" className="inline-flex items-center gap-1 text-sm font-semibold text-brand-800 hover:underline">
@@ -39,7 +39,7 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
               </div>
             </div>
           </div>
-          <p className="text-lg text-muted">{tip.intro}</p>
+          <p className="max-w-2xl text-lg text-muted">{tip.intro}</p>
           {type && meta && <div className={`rounded-2xl ${meta.tint} px-4 py-3`}><TypeIllustration type={type} className="mx-auto h-24 w-full max-w-xs" /></div>}
         </header>
 
@@ -51,7 +51,7 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
 
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-ink">Quy luật hay gặp</h2>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {tip.rules.map((r, i) => (
               <Card key={r.name} className="space-y-1">
                 <p className="flex items-center gap-2 font-bold text-ink">

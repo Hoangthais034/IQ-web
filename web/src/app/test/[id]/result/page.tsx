@@ -41,7 +41,7 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
   const pct = data.total ? Math.round((100 * data.correct) / data.total) : 0;
   const marker = data.iq_estimate === null ? 0 : Math.min(100, Math.max(0, ((data.iq_estimate - 55) / 90) * 100));
   return (
-    <PageShell width="max-w-3xl">
+    <PageShell>
       <div className="space-y-8">
         <section className="card overflow-hidden">
           <div className="bg-gradient-to-br from-brand-soft to-white p-6 text-center sm:p-8">

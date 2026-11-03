@@ -14,12 +14,12 @@ const RULES: { icon: IconName; t: string; d: string }[] = [
 
 export default function TestIntro() {
   return (
-    <PageShell width="max-w-2xl">
+    <PageShell>
       <div className="space-y-6">
         <h1 className="text-3xl font-extrabold text-ink">Bài test IQ</h1>
-        <ul className="grid gap-3 sm:grid-cols-2">
+        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {RULES.map((r) => (
-            <li key={r.t} className="card flex gap-3 p-4">
+            <li key={r.t} className="card flex flex-col gap-3 p-4">
               <IconTile name={r.icon} />
               <div><p className="font-bold text-ink">{r.t}</p><p className="text-sm text-muted">{r.d}</p></div>
             </li>

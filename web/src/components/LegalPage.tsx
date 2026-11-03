@@ -6,12 +6,12 @@ export function contactEmail() {
 
 export function LegalPage({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <main className="mx-auto max-w-2xl px-4 py-10">
+    <main className="mx-auto max-w-5xl px-4 py-10"><div className="max-w-3xl">
       <h1 className="text-3xl font-extrabold text-ink">{title}</h1>
       <p className="mt-1 text-sm text-subtle">Cập nhật lần cuối: {LEGAL_UPDATED}</p>
       <div className="mt-6 space-y-6 leading-relaxed text-ink [&_h2]:mb-2 [&_h2]:border-l-4 [&_h2]:border-brand [&_h2]:pl-3 [&_h2]:text-xl [&_h2]:font-bold [&_a]:text-brand-800 [&_a]:underline [&_li]:mt-1 [&_ul]:list-disc [&_ul]:pl-5">
         {children}
       </div>
-    </main>
+    </div></main>
   );
 }

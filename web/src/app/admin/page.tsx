@@ -44,7 +44,7 @@ export default async function AdminPage() {
   const unmatched = txs ?? [];
 
   return (
-    <main className="mx-auto max-w-3xl space-y-6 px-4 py-8">
+    <main className="mx-auto max-w-5xl space-y-6 px-4 py-8">
       <h1 className="text-2xl font-bold">Giao dịch chưa khớp ({unmatched.length})</h1>
       {unmatched.length === 0 && <p className="text-muted">Không có giao dịch nào cần xử lý.</p>}
       {unmatched.map((t) => (

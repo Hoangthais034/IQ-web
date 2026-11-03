@@ -11,6 +11,12 @@
 }
 
 @theme inline {
+  /* Corners: gentle, about 6px. */
+  --radius-md: 6px;
+  --radius-lg: 6px;
+  --radius-xl: 6px;
+  --radius-2xl: 6px;
+  --radius-3xl: 8px;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-brand: #4f8cff;
@@ -49,7 +55,7 @@ body { background: var(--background); color: var(--foreground); }
   a, button, summary, label[for], select, [role="button"] { cursor: pointer; }
   button:disabled, [aria-disabled="true"], input:disabled, select:disabled, textarea:disabled { cursor: not-allowed; }
   :focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; border-radius: 6px; }
-  input:focus-visible, textarea:focus-visible, select:focus-visible { outline-offset: 0; border-radius: 12px; }
+  input:focus-visible, textarea:focus-visible, select:focus-visible { outline-offset: 0; border-radius: 6px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
 }
 
@@ -57,7 +63,7 @@ body { background: var(--background); color: var(--foreground); }
 @layer components {
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-    min-height: 44px; padding: 0.625rem 1.25rem; border-radius: 12px; border: 1px solid transparent;
+    min-height: 44px; padding: 0.625rem 1.25rem; border-radius: 6px; border: 1px solid transparent;
     font-weight: 600; line-height: 1.25; text-align: center; user-select: none;
     transition: background-color .15s, border-color .15s, box-shadow .15s, transform .08s, color .15s;
   }
@@ -77,7 +83,7 @@ body { background: var(--background); color: var(--foreground); }
   .btn.is-loading { pointer-events: none; opacity: .9; }
 
   .field {
-    width: 100%; min-height: 44px; padding: 0.625rem 0.875rem; border-radius: 12px; background: #fff; color: var(--color-ink);
+    width: 100%; min-height: 44px; padding: 0.625rem 0.875rem; border-radius: 6px; background: #fff; color: var(--color-ink);
     border: 1px solid var(--color-line-strong); transition: border-color .15s, box-shadow .15s;
   }
   .field::placeholder { color: var(--color-subtle); }
@@ -86,13 +92,13 @@ body { background: var(--background); color: var(--foreground); }
   .field[aria-invalid="true"] { border-color: var(--color-danger); }
   .field:disabled { background: var(--color-disabled); color: var(--color-disabled-ink); border-color: var(--color-line); }
 
-  .card { background: #fff; border: 1px solid var(--color-line); border-radius: 16px; box-shadow: var(--shadow-card); }
+  .card { background: #fff; border: 1px solid var(--color-line); border-radius: 6px; box-shadow: var(--shadow-card); }
   .card-link { transition: transform .15s, box-shadow .15s, border-color .15s; }
   .card-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); border-color: var(--color-brand); }
   .card-link:active { transform: translateY(0); }
 
   .option {
-    display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 12px; text-align: left;
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 6px; text-align: left;
     background: #fff; border: 2px solid var(--color-line); transition: border-color .15s, background-color .15s, transform .08s, box-shadow .15s;
   }
   .option:hover:not(:disabled) { border-color: var(--color-brand-600); background: var(--color-brand-soft); box-shadow: var(--shadow-card); }
