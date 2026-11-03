@@ -43,7 +43,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           </header>
           {children}
           <footer className="mt-16 border-t">
-            <div className="mx-auto flex max-w-3xl flex-wrap gap-4 px-4 py-6 text-sm text-neutral-500">
+            <div className="mx-auto flex max-w-3xl flex-wrap gap-4 px-4 py-6 text-sm text-neutral-600">
               <span>© {new Date().getFullYear()} Test IQ</span>
               <Link href="/dieu-khoan" className="hover:underline">Điều khoản sử dụng</Link>
               <Link href="/bao-mat" className="hover:underline">Chính sách bảo mật</Link>
