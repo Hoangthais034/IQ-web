@@ -27,7 +27,7 @@ Test API: `cd api && uv sync && uv run pytest` (cần Postgres ở `DATABASE_URL
 1. Tạo service loại **Docker Compose**, trỏ vào repo này, file `docker-compose.yml`.
 2. Khai báo các biến trong `.env.example` ở tab Environment. Biến `NEXT_PUBLIC_*` được đưa vào lúc build.
 3. Gắn domain vào service `web`, container port `3000`, bật HTTPS. Compose production không publish port nào ra host nên không trùng service khác.
-4. Bật backup cho volume `db-data`.
+4. Backup thư mục dữ liệu Postgres `/mnt/iq-web/postgres` (đổi bằng `DB_DATA_DIR`), ví dụ `pg_dump` định kỳ hoặc copy cả thư mục khi đã dừng db.
 5. Lần đầu deploy, tạo ngân hàng đề: `docker compose exec api python -m app.cli generate --count 300`.
 
 ## Ngân hàng đề
