@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from sqlalchemy.engine import URL
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -7,6 +8,11 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     database_url: str = "postgresql+psycopg://iq:iq@localhost:5432/iq"
+    # In production compose passes the parts separately, so passwords with / + = @ % need no manual escaping.
+    postgres_host: str = ""
+    postgres_user: str = "iq"
+    postgres_password: str = ""
+    postgres_db: str = "iq"
     app_env: str = "development"
     api_jwt_secret: str = "change-me"
     admin_emails: str = ""
@@ -28,6 +34,15 @@ class Settings(BaseSettings):
     smtp_from: str = ""  # defaults to smtp_username
     contact_max_per_hour: int = 3
     contact_global_per_hour: int = 60
+
+    @property
+    def sqlalchemy_url(self) -> URL | str:
+        if self.postgres_host:
+            return URL.create(
+                "postgresql+psycopg", username=self.postgres_user, password=self.postgres_password,
+                host=self.postgres_host, port=5432, database=self.postgres_db,
+            )
+        return self.database_url
 
     @property
     def admin_email_set(self) -> set[str]:

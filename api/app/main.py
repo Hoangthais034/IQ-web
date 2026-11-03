@@ -15,7 +15,9 @@ async def lifespan(_: FastAPI):
     s = get_settings()
     # A weak shared secret lets anything on the Docker network forge user/admin tokens.
     if s.app_env == "production" and (len(s.api_jwt_secret) < 32 or s.api_jwt_secret == "change-me"):
-        raise RuntimeError("API_JWT_SECRET must be at least 32 characters in production")
+        raise RuntimeError(
+            f"API_JWT_SECRET is too short ({len(s.api_jwt_secret)} chars, need 32+). Generate one with: openssl rand -hex 32"
+        )
     # Sync endpoints run in AnyIO's thread pool (40 by default). Keep it equal to the DB pool so a burst
     # queues for a thread instead of timing out while waiting for a DB connection.
     anyio.to_thread.current_default_thread_limiter().total_tokens = DB_POOL_MAX

@@ -8,7 +8,9 @@ from app.config import get_settings
 from app.db import Base
 
 config = context.config
-config.set_main_option("sqlalchemy.url", get_settings().database_url)
+_url = get_settings().sqlalchemy_url
+_url = _url.render_as_string(hide_password=False) if not isinstance(_url, str) else _url
+config.set_main_option("sqlalchemy.url", _url.replace("%", "%%"))  # configparser treats % specially
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 

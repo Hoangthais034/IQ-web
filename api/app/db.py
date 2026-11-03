@@ -15,7 +15,7 @@ class Base(DeclarativeBase):
 
 # Per worker process. main.py caps the sync thread pool at DB_POOL_MAX so threads never wait on the pool.
 DB_POOL_MAX = 20
-engine = create_engine(get_settings().database_url, pool_pre_ping=True, pool_size=10, max_overflow=DB_POOL_MAX - 10, pool_timeout=30)
+engine = create_engine(get_settings().sqlalchemy_url, pool_pre_ping=True, pool_size=10, max_overflow=DB_POOL_MAX - 10, pool_timeout=30)
 SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
 
 
