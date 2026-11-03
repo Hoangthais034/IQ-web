@@ -54,7 +54,7 @@ export function AdSlot({ className = "" }: { className?: string }) {
   if (!enabled || !mobile) return null;
   return (
     <aside aria-label="Quảng cáo" className={`my-6 ${className}`}>
-      <p className="mb-1 text-center text-[11px] text-neutral-400">Quảng cáo</p>
+      <p className="mb-1 text-center text-[11px] text-neutral-500">Quảng cáo</p>
       <div
         ref={ref}
         className="flex w-full items-center justify-center overflow-hidden rounded-md bg-neutral-50"
