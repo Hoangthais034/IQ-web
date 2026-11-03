@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { LegalPage, contactEmail } from "@/components/LegalPage";
 
-export const metadata = { title: "Điều khoản sử dụng" };
+export const metadata = { title: "Điều khoản sử dụng", alternates: { canonical: "/dieu-khoan" } };
 
 export default function TermsPage() {
   const email = contactEmail();

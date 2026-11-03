@@ -9,7 +9,7 @@ import { getMe } from "@/lib/me";
 
 import type { PaymentInfo } from "./actions";
 
-export const metadata = { title: "Gói tháng" };
+export const metadata = { title: "Gói tháng", robots: { index: false } };
 
 export default async function SubscribePage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
   const { next = "/" } = await searchParams;

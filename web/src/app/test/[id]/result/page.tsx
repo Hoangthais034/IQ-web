@@ -11,6 +11,8 @@ import { apiJson } from "@/lib/api";
 import { getMe } from "@/lib/me";
 import { TYPE_LABELS, type Result } from "@/lib/types";
 
+export const metadata = { title: "Kết quả bài test", robots: { index: false, follow: false } };
+
 export default async function ResultPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { status, data } = await apiJson<Result>(`/attempts/${id}/result`);

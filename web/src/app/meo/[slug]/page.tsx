@@ -7,6 +7,8 @@ import { Icon, TypeIcon, TypeIllustration } from "@/components/icons";
 import { Callout, Card, Chip, PageShell, Steps } from "@/components/ui";
 import { TIPS, tipBySlug } from "@/content/tips";
 import { TYPE_META, typeForTipSlug } from "@/content/types";
+import { JsonLd } from "@/components/JsonLd";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 export function generateStaticParams() {
   return TIPS.map((t) => ({ slug: t.slug }));
@@ -14,7 +16,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const tip = tipBySlug((await params).slug);
-  return tip ? { title: tip.title, description: tip.intro } : {};
+  return tip ? { title: tip.title, description: tip.intro, alternates: { canonical: `/meo/${tip.slug}` }, openGraph: { type: "article" as const, title: tip.title, description: tip.intro, url: `/meo/${tip.slug}`, siteName: "Test IQ", locale: "vi_VN", images: ["/og.png"] } } : {};
 }
 
 export default async function TipPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -24,6 +26,14 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
   const meta = type ? TYPE_META[type] : null;
   return (
     <PageShell>
+      <JsonLd data={{ "@context": "https://schema.org", "@graph": [
+        { "@type": "Article", headline: tip.title, description: tip.intro, inLanguage: "vi", mainEntityOfPage: `${SITE_URL}/meo/${tip.slug}`, dateModified: "2026-11-03", author: { "@type": "Organization", name: SITE_NAME }, publisher: { "@type": "Organization", name: SITE_NAME } },
+        { "@type": "BreadcrumbList", itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Trang chủ", item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "Mẹo", item: `${SITE_URL}/meo` },
+          { "@type": "ListItem", position: 3, name: tip.title, item: `${SITE_URL}/meo/${tip.slug}` },
+        ] },
+      ] }} />
       <div className="space-y-8">
         <header className="space-y-4">
           <Link href="/meo" className="inline-flex items-center gap-1 text-sm font-semibold text-brand-800 hover:underline">

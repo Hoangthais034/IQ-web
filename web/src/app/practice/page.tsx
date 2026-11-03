@@ -3,7 +3,11 @@ import { Icon, TypeIcon } from "@/components/icons";
 import { Callout, PageShell, SectionHeader } from "@/components/ui";
 import { TYPE_META, TYPE_ORDER } from "@/content/types";
 
-export const metadata = { title: "Luyện theo dạng đề" };
+export const metadata = {
+  title: "Luyện test IQ theo dạng đề",
+  description: "Luyện 10 câu mỗi lượt theo từng dạng đề IQ, có giải thích ngay sau mỗi câu.",
+  alternates: { canonical: "/practice" },
+};
 
 export default function PracticePage() {
   return (

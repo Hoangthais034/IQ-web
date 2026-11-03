@@ -5,7 +5,11 @@ import { Callout, PageShell, SectionHeader } from "@/components/ui";
 import { TIPS } from "@/content/tips";
 import { TYPE_META, typeForTipSlug } from "@/content/types";
 
-export const metadata = { title: "Mẹo làm bài test IQ" };
+export const metadata = {
+  title: "Mẹo làm bài test IQ cho từng dạng đề",
+  description: "Mẹo làm bài test IQ: cách nhận ra dạng đề, các quy luật hay gặp và cách giải từng bước cho dãy số, ma trận hình, xoay hình, logic, ngôn ngữ.",
+  alternates: { canonical: "/meo" },
+};
 
 const GENERAL = [
   { icon: "clock" as const, t: "Quản lý thời gian", d: "40 câu trong 35 phút là khoảng 50 giây mỗi câu. Quá 1 phút thì bỏ qua, quay lại sau." },

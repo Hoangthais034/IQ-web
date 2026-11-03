@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { LegalPage, contactEmail } from "@/components/LegalPage";
 
-export const metadata = { title: "Chính sách bảo mật" };
+export const metadata = { title: "Chính sách bảo mật", alternates: { canonical: "/bao-mat" } };
 
 export default function PrivacyPage() {
   const email = contactEmail();

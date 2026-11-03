@@ -3,7 +3,13 @@ import Link from "next/link";
 import { auth, signOut } from "@/auth";
 import { Icon, TypeIcon, TypeIllustration } from "@/components/icons";
 import { ButtonLink, Callout, Chip, Faq, SectionHeader, Steps, IconTile } from "@/components/ui";
+import { JsonLd } from "@/components/JsonLd";
 import { TYPE_META, TYPE_ORDER } from "@/content/types";
+
+export const metadata = {
+  title: { absolute: "Test IQ online miễn phí 40 câu, mẹo làm bài từng dạng đề" },
+  alternates: { canonical: "/" },
+};
 
 const FAQ = [
   { q: "Kết quả có chính xác không?", a: "Đây là điểm ước tính để bạn tham khảo và luyện tập, không phải bài test IQ chuẩn hóa hay chẩn đoán." },
@@ -16,6 +22,7 @@ export default async function Home() {
   const session = await auth();
   return (
     <main>
+      <JsonLd data={{ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) }} />
       {/* Hero */}
       <section className="bg-gradient-to-b from-brand-soft to-white">
         <div className="mx-auto grid max-w-5xl items-center gap-10 px-4 py-12 sm:py-16 md:grid-cols-[1.1fr_0.9fr]">

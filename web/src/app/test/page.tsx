@@ -3,7 +3,11 @@ import { Callout, IconTile, PageShell } from "@/components/ui";
 
 import { startAttempt } from "./actions";
 
-export const metadata = { title: "Làm bài test IQ" };
+export const metadata = {
+  title: "Làm bài test IQ online 40 câu",
+  description: "Bài test IQ online 40 câu trong 35 phút, độ khó tăng dần. Kết quả chỉ mang tính tham khảo, không phải bài test IQ chuẩn hóa.",
+  alternates: { canonical: "/test" },
+};
 
 const RULES: { icon: IconName; t: string; d: string }[] = [
   { icon: "list", t: "40 câu, 6 dạng đề", d: "Độ khó tăng dần từ dễ đến khó." },

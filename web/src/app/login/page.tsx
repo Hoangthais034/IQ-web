@@ -6,6 +6,8 @@ const ERRORS: Record<string, string> = {
   MissingCSRF: "Phiên đăng nhập đã hết hạn. Bạn bấm đăng nhập lại nhé.",
 };
 
+export const metadata = { title: "Đăng nhập", robots: { index: false } };
+
 export default async function LoginPage({
   searchParams,
 }: {

@@ -2,7 +2,7 @@ import { getMe } from "@/lib/me";
 
 import { ContactForm } from "./ContactForm";
 
-export const metadata = { title: "Liên hệ" };
+export const metadata = { title: "Liên hệ", description: "Góp ý, báo lỗi câu hỏi hoặc hỏi về dữ liệu cá nhân.", alternates: { canonical: "/lien-he" } };
 
 const TOPIC_KEYS = new Set(["gop_y", "bao_loi", "thanh_toan", "du_lieu", "khac"]);
 
