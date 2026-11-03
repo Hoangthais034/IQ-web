@@ -8,6 +8,8 @@ import { Callout, Card, Chip, PageShell, Steps } from "@/components/ui";
 import { TIPS, tipBySlug } from "@/content/tips";
 import { TYPE_META, typeForTipSlug } from "@/content/types";
 import { JsonLd } from "@/components/JsonLd";
+import { Prose } from "@/components/Prose";
+import { TIP_MORE } from "@/content/tip-articles";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 export function generateStaticParams() {
@@ -24,6 +26,7 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
   if (!tip) notFound();
   const type = typeForTipSlug(tip.slug);
   const meta = type ? TYPE_META[type] : null;
+  const more = TIP_MORE[tip.slug];
   return (
     <PageShell>
       <JsonLd data={{ "@context": "https://schema.org", "@graph": [
@@ -78,6 +81,18 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
           <h2 className="text-xl font-bold text-ink">Cách giải từng bước</h2>
           <Card><Steps items={tip.steps} /></Card>
         </section>
+
+        {more && (
+          <>
+            <Prose sections={more.sections} />
+            <section className="space-y-3">
+              <h2 className="text-xl font-bold text-ink">Những lỗi hay gặp</h2>
+              <Callout tone="warn" icon="shield">
+                <ul className="list-disc space-y-1 pl-5">{more.mistakes.map((m) => <li key={m}>{m}</li>)}</ul>
+              </Callout>
+            </section>
+          </>
+        )}
 
         <section className="rounded-2xl border border-sun bg-sun-soft p-5">
           <h2 className="mb-2 flex items-center gap-2 font-bold text-sun-ink"><Icon name="bulb" className="h-5 w-5" /> Ví dụ</h2>

@@ -40,13 +40,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <AdsProvider enabled={adsEnabled}>
           <header className="sticky top-0 z-30 border-b border-line bg-white/90 backdrop-blur">
             <nav className="mx-auto flex max-w-5xl items-center gap-1 px-4 py-2.5 text-sm">
-              <Link href="/" className="mr-2 flex items-center gap-2 rounded-lg px-1 py-1 text-base font-extrabold text-ink">
+              <Link href="/" className="mr-1 flex items-center gap-2 rounded-lg px-1 py-1 text-base font-extrabold text-ink">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/logo-mark.svg" alt="" width={30} height={30} />
-                Test IQ
+                <span className="hidden min-[420px]:inline">Test IQ</span>
               </Link>
               <NavLink href="/meo">Mẹo</NavLink>
-              <NavLink href="/practice">Luyện tập</NavLink>
+              <NavLink href="/practice" className="hidden sm:inline-block">Luyện tập</NavLink>
+              <NavLink href="/huong-dan" className="hidden sm:inline-block">Hướng dẫn</NavLink>
               <span className="flex-1" />
               {me?.is_admin && <NavLink href="/admin">Duyệt đề</NavLink>}
               {me ? (
@@ -58,7 +59,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               ) : (
                 <NavLink href="/login">Đăng nhập</NavLink>
               )}
-              <Link href="/test" className="btn btn-primary ml-2 !min-h-9 !px-4 !py-1.5">Làm bài test</Link>
+              <Link href="/test" className="btn btn-primary ml-1 whitespace-nowrap !min-h-9 !px-3 !py-1.5 sm:ml-2 sm:!px-4">Làm bài test</Link>
             </nav>
           </header>
           {children}
@@ -74,6 +75,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               </div>
               <nav className="flex flex-wrap items-start gap-x-5 gap-y-2 font-medium">
                 <Link href="/meo" className="hover:text-brand-800 hover:underline">Mẹo làm bài</Link>
+                <Link href="/huong-dan" className="hover:text-brand-800 hover:underline">Hướng dẫn</Link>
                 <Link href="/dieu-khoan" className="hover:text-brand-800 hover:underline">Điều khoản sử dụng</Link>
                 <Link href="/bao-mat" className="hover:text-brand-800 hover:underline">Chính sách bảo mật</Link>
                 <Link href="/lien-he" className="hover:text-brand-800 hover:underline">Liên hệ</Link>

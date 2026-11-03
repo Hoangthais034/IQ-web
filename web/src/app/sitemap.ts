@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { GUIDES } from "@/content/guides";
 import { TIPS } from "@/content/tips";
 import { SITE_URL } from "@/lib/site";
 
@@ -14,6 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/", 1, "weekly"),
     page("/meo", 0.9, "weekly"),
     ...TIPS.map((t) => page(`/meo/${t.slug}`, 0.8, "monthly")),
+    page("/huong-dan", 0.8, "weekly"),
+    ...GUIDES.map((g) => page(`/huong-dan/${g.slug}`, 0.7, "monthly")),
     page("/practice", 0.7, "monthly"),
     page("/test", 0.8, "monthly"),
     page("/lien-he", 0.3, "yearly"),
