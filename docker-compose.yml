@@ -78,6 +78,7 @@ services:
       AUTH_GOOGLE_SECRET: ${AUTH_GOOGLE_SECRET}
       API_JWT_SECRET: ${API_JWT_SECRET:?set API_JWT_SECRET (openssl rand -base64 48)}
       API_INTERNAL_URL: http://api:8000
+      GOOGLE_SITE_VERIFICATION: ${GOOGLE_SITE_VERIFICATION:-}
     depends_on:
       api:
         condition: service_healthy
