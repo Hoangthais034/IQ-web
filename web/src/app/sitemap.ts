@@ -5,7 +5,7 @@ import { TIPS } from "@/content/tips";
 import { SITE_URL } from "@/lib/site";
 
 // Bump when the page content changes meaningfully, so lastmod stays honest.
-const UPDATED = new Date("2026-11-03");
+const UPDATED = new Date("2026-11-04");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const page = (path: string, priority: number, changeFrequency: "weekly" | "monthly" | "yearly") => ({
@@ -16,9 +16,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/meo", 0.9, "weekly"),
     ...TIPS.map((t) => page(`/meo/${t.slug}`, 0.8, "monthly")),
     page("/huong-dan", 0.8, "weekly"),
-    ...GUIDES.map((g) => page(`/huong-dan/${g.slug}`, 0.7, "monthly")),
+    ...GUIDES.map((g) => ({ ...page(`/huong-dan/${g.slug}`, 0.7, "monthly"), lastModified: new Date(g.updated) })),
     page("/practice", 0.7, "monthly"),
-    page("/test", 0.8, "monthly"),
+    page("/test", 0.9, "monthly"),
     page("/lien-he", 0.3, "yearly"),
     page("/dieu-khoan", 0.2, "yearly"),
     page("/bao-mat", 0.2, "yearly"),

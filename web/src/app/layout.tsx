@@ -15,8 +15,10 @@ const font = Be_Vietnam_Pro({ subsets: ["latin", "vietnamese"], weight: ["400", 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:34817"),
   title: { default: "Test IQ online miễn phí, mẹo làm bài từng dạng đề", template: "%s · Test IQ" },
-  description: "Làm bài test IQ online 40 câu, 6 dạng đề, kèm mẹo giải và giải thích chi tiết. Miễn phí, tiếng Việt, kết quả chỉ mang tính tham khảo.",
+  description: "Test IQ online miễn phí bằng tiếng Việt: bài kiểm tra IQ 40 câu, 6 dạng đề, kèm mẹo giải và giải thích chi tiết. Kết quả chỉ mang tính tham khảo.",
   applicationName: SITE_NAME,
+  // Set GOOGLE_SITE_VERIFICATION to the token from Search Console (HTML tag method). Empty = no tag.
+  ...(process.env.GOOGLE_SITE_VERIFICATION ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } } : {}),
   openGraph: {
     type: "website", locale: "vi_VN", siteName: SITE_NAME,
     title: "Test IQ online miễn phí, mẹo làm bài từng dạng đề",
@@ -34,7 +36,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang="vi">
       <body className={`${font.className} bg-white text-ink antialiased`}>
         <JsonLd data={{ "@context": "https://schema.org", "@graph": [
-          { "@type": "WebSite", name: SITE_NAME, url: SITE_URL, inLanguage: "vi" },
+          { "@type": "WebSite", name: SITE_NAME, alternateName: "Test IQ online miễn phí", url: SITE_URL, inLanguage: "vi" },
           { "@type": "Organization", name: SITE_NAME, url: SITE_URL, logo: `${SITE_URL}/logo.png` },
         ] }} />
         <AdsProvider enabled={adsEnabled}>
@@ -76,6 +78,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               <nav className="flex flex-wrap items-start gap-x-5 gap-y-2 font-medium">
                 <Link href="/meo" className="hover:text-brand-800 hover:underline">Mẹo làm bài</Link>
                 <Link href="/huong-dan" className="hover:text-brand-800 hover:underline">Hướng dẫn</Link>
+                <Link href="/huong-dan/iq-la-gi" className="hover:text-brand-800 hover:underline">IQ là gì</Link>
+                <Link href="/huong-dan/cau-hoi-iq-co-dap-an" className="hover:text-brand-800 hover:underline">Câu hỏi IQ có đáp án</Link>
                 <Link href="/dieu-khoan" className="hover:text-brand-800 hover:underline">Điều khoản sử dụng</Link>
                 <Link href="/bao-mat" className="hover:text-brand-800 hover:underline">Chính sách bảo mật</Link>
                 <Link href="/lien-he" className="hover:text-brand-800 hover:underline">Liên hệ</Link>

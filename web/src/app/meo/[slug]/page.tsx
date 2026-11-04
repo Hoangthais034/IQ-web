@@ -10,6 +10,7 @@ import { TYPE_META, typeForTipSlug } from "@/content/types";
 import { JsonLd } from "@/components/JsonLd";
 import { Prose } from "@/components/Prose";
 import { TIP_MORE } from "@/content/tip-articles";
+import { GUIDES } from "@/content/guides";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 export function generateStaticParams() {
@@ -27,10 +28,11 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
   const type = typeForTipSlug(tip.slug);
   const meta = type ? TYPE_META[type] : null;
   const more = TIP_MORE[tip.slug];
+  const guides = GUIDES.filter((g) => g.related.includes(tip.slug)).slice(0, 4);
   return (
     <PageShell>
       <JsonLd data={{ "@context": "https://schema.org", "@graph": [
-        { "@type": "Article", headline: tip.title, description: tip.intro, inLanguage: "vi", mainEntityOfPage: `${SITE_URL}/meo/${tip.slug}`, dateModified: "2026-11-03", author: { "@type": "Organization", name: SITE_NAME }, publisher: { "@type": "Organization", name: SITE_NAME } },
+        { "@type": "Article", headline: tip.title, description: tip.intro, inLanguage: "vi", mainEntityOfPage: `${SITE_URL}/meo/${tip.slug}`, image: `${SITE_URL}/og.png`, datePublished: "2026-11-03", dateModified: "2026-11-03", author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL }, publisher: { "@type": "Organization", name: SITE_NAME, logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png` } } },
         { "@type": "BreadcrumbList", itemListElement: [
           { "@type": "ListItem", position: 1, name: "Trang chủ", item: SITE_URL },
           { "@type": "ListItem", position: 2, name: "Mẹo", item: `${SITE_URL}/meo` },
@@ -105,6 +107,17 @@ export default async function TipPage({ params }: { params: Promise<{ slug: stri
           <form action={startAttempt.bind(null, "practice", tip.practiceType)}>
             <button className="btn btn-primary w-full sm:w-auto"><Icon name="play" className="h-5 w-5" /> Luyện 10 câu dạng này</button>
           </form>
+        )}
+
+        {guides.length > 0 && (
+          <section className="space-y-3">
+            <h2 className="text-xl font-bold text-ink">Đọc thêm</h2>
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {guides.map((g) => (
+                <li key={g.slug}><Link href={`/huong-dan/${g.slug}`} className="card card-link block h-full p-4 text-sm font-semibold text-ink">{g.title}</Link></li>
+              ))}
+            </ul>
+          </section>
         )}
 
         <AdSlot />

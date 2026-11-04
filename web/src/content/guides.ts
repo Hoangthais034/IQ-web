@@ -1,3 +1,4 @@
+import { NEW_GUIDES } from "./guides-more";
 import type { Section } from "./tip-articles";
 
 export type Guide = {
@@ -7,6 +8,9 @@ export type Guide = {
   intro: string;
   sections: Section[];
   related: string[]; // tip slugs
+  faq?: { q: string; a: string }[]; // rendered on the page and as FAQPage structured data
+  published: string; // ISO date
+  updated: string; // ISO date, bump when the text changes meaningfully
 };
 
 export const GUIDES: Guide[] = [
@@ -47,6 +51,13 @@ export const GUIDES: Guide[] = [
       },
     ],
     related: ["day-so", "ma-tran-hinh"],
+    faq: [
+      { q: "IQ trung bình là bao nhiêu?", a: "Theo cách dựng thang điểm của các bài test chuẩn hóa, IQ trung bình là 100. Khoảng hai phần ba số người có điểm từ 85 đến 115." },
+      { q: "IQ 120 có cao không?", a: "Có. 120 cao hơn khoảng 90% số người trên thang trung bình 100, độ lệch chuẩn 15. Với bài test online, hãy coi đây là mức tham khảo." },
+      { q: "IQ dưới 100 có phải là kém không?", a: "Không. Điểm từ 85 đến 100 vẫn nằm trong vùng bình thường, và một bài test online có sai số khá lớn." },
+    ],
+    published: "2026-11-03",
+    updated: "2026-11-04",
   },
   {
     slug: "bai-test-iq-bao-lau",
@@ -80,6 +91,8 @@ export const GUIDES: Guide[] = [
       },
     ],
     related: ["day-so", "logic"],
+    published: "2026-11-03",
+    updated: "2026-11-03",
   },
   {
     slug: "cach-tang-diem-test-iq",
@@ -113,6 +126,8 @@ export const GUIDES: Guide[] = [
       },
     ],
     related: ["day-so", "ma-tran-hinh", "hinh-khac-loai"],
+    published: "2026-11-03",
+    updated: "2026-11-03",
   },
   {
     slug: "test-iq-online-co-chinh-xac-khong",
@@ -147,6 +162,12 @@ export const GUIDES: Guide[] = [
       },
     ],
     related: ["logic", "ngon-ngu"],
+    faq: [
+      { q: "Có bài test IQ online nào chính xác tuyệt đối không?", a: "Không. Bài test chính thức như WAIS hay Stanford-Binet phải do chuyên gia thực hiện trực tiếp. Bài online chỉ cho kết quả ước tính." },
+      { q: "Vì sao làm hai trang web lại ra hai điểm khác nhau?", a: "Mỗi trang dùng bộ câu hỏi, thời gian và cách quy đổi điểm khác nhau. Điểm chênh 10 đến 15 giữa các trang là chuyện bình thường." },
+    ],
+    published: "2026-11-03",
+    updated: "2026-11-04",
   },
   {
     slug: "luyen-tu-duy-logic-moi-ngay",
@@ -180,7 +201,10 @@ export const GUIDES: Guide[] = [
       },
     ],
     related: ["day-so", "xoay-hinh", "logic"],
+    published: "2026-11-03",
+    updated: "2026-11-03",
   },
+  ...NEW_GUIDES,
 ];
 
 export const guideBySlug = (slug: string) => GUIDES.find((g) => g.slug === slug);

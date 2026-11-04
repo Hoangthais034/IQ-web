@@ -6,7 +6,7 @@ import { GUIDES } from "@/content/guides";
 
 export const metadata = {
   title: "Hướng dẫn làm bài test IQ",
-  description: "Các bài hướng dẫn về thang điểm IQ, cách chia thời gian, cách luyện tập và độ chính xác của test IQ online.",
+  description: "IQ là gì, IQ bao nhiêu là thiên tài, câu hỏi IQ có đáp án, test IQ khi phỏng vấn, thang điểm IQ và cách luyện tập: hướng dẫn ngắn gọn bằng tiếng Việt.",
   alternates: { canonical: "/huong-dan" },
 };
 

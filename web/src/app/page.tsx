@@ -4,6 +4,7 @@ import { auth, signOut } from "@/auth";
 import { Icon, TypeIcon, TypeIllustration } from "@/components/icons";
 import { ButtonLink, Callout, Chip, Faq, SectionHeader, Steps, IconTile } from "@/components/ui";
 import { JsonLd } from "@/components/JsonLd";
+import { GUIDES } from "@/content/guides";
 import { TYPE_META, TYPE_ORDER } from "@/content/types";
 
 export const metadata = {
@@ -11,9 +12,15 @@ export const metadata = {
   alternates: { canonical: "/" },
 };
 
+// Guides surfaced on the home page: the ones answering the most searched questions.
+const FEATURED = ["iq-la-gi", "iq-bao-nhieu-la-thien-tai", "cau-hoi-iq-co-dap-an", "thang-diem-iq", "test-iq-phong-van-xin-viec", "test-iq-online-co-chinh-xac-khong"];
+
 const FAQ = [
+  { q: "Bài test IQ này có miễn phí không?", a: "Có. Làm bài test 40 câu và luyện tập theo dạng đều miễn phí, không cần đăng ký để bắt đầu." },
+  { q: "Làm bài kiểm tra IQ mất bao lâu?", a: "Bài đầy đủ có 40 câu trong 35 phút. Nếu chỉ muốn luyện, mỗi lượt luyện tập có 10 câu theo một dạng đề." },
   { q: "Kết quả có chính xác không?", a: "Đây là điểm ước tính để bạn tham khảo và luyện tập, không phải bài test IQ chuẩn hóa hay chẩn đoán." },
-  { q: "Tôi có phải trả tiền không?", a: "Làm bài và luyện tập miễn phí. Để xem điểm bạn đăng nhập Google rồi xem một quảng cáo 15 giây, hoặc mua gói tháng 30.000đ để không phải xem quảng cáo." },
+  { q: "Làm sao để xem điểm?", a: "Sau khi nộp bài, bạn đăng nhập Google rồi xem một quảng cáo 15 giây, hoặc dùng gói tháng 30.000đ để không phải xem quảng cáo." },
+  { q: "IQ trung bình là bao nhiêu?", a: "Trên thang điểm của các bài test chuẩn hóa, IQ trung bình là 100 và khoảng hai phần ba số người có điểm từ 85 đến 115." },
   { q: "Nếu tải lại trang hoặc mất mạng thì sao?", a: "Bài làm được lưu liên tục. Bạn mở lại là làm tiếp được, đồng hồ vẫn chạy theo thời gian thực." },
   { q: "Bài làm khi chưa đăng nhập có mất không?", a: "Không. Bài được giữ lại và gắn vào tài khoản ngay khi bạn đăng nhập." },
 ];
@@ -28,11 +35,11 @@ export default async function Home() {
         <div className="mx-auto grid max-w-5xl items-center gap-10 px-4 py-12 sm:py-16 md:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-5">
             <Chip icon="star" tone="brand">Miễn phí làm bài và luyện tập</Chip>
-            <h1 className="text-4xl font-extrabold leading-tight text-ink sm:text-5xl">
-              Thắp sáng tư duy <span className="text-brand-600">mỗi ngày</span>
+            <h1 className="text-balance text-4xl font-extrabold leading-tight text-ink sm:text-5xl">
+              Test IQ online miễn phí <span className="mt-2 block text-2xl text-brand-600 sm:text-4xl">Thắp sáng tư duy mỗi ngày</span>
             </h1>
             <p className="max-w-lg text-lg text-muted">
-              Bài test 40 câu gồm 6 dạng đề, kèm mẹo giải và giải thích chi tiết để bạn hiểu mình sai ở đâu.
+              Bài trắc nghiệm IQ 40 câu gồm 6 dạng đề, bằng tiếng Việt, kèm mẹo giải và giải thích chi tiết để bạn hiểu mình sai ở đâu.
             </p>
             <div className="flex flex-wrap gap-3">
               <ButtonLink href="/test"><Icon name="play" className="h-5 w-5" /> Làm bài test</ButtonLink>
@@ -109,6 +116,22 @@ export default async function Home() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Guides */}
+      <section className="mx-auto max-w-5xl space-y-8 px-4 py-12">
+        <SectionHeader eyebrow="Hướng dẫn" title="Tìm hiểu về IQ trước khi làm bài" subtitle="Những câu hỏi được tìm nhiều nhất về chỉ số IQ, trả lời ngắn gọn và thẳng thắn." center />
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURED.map((slug) => GUIDES.find((g) => g.slug === slug)).filter((g) => !!g).map((g) => (
+            <li key={g.slug}>
+              <Link href={`/huong-dan/${g.slug}`} className="card card-link block h-full space-y-2 p-5">
+                <h3 className="font-bold text-ink">{g.title}</h3>
+                <p className="text-sm text-muted">{g.description}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className="text-center"><ButtonLink href="/huong-dan" variant="outline">Xem tất cả hướng dẫn</ButtonLink></div>
       </section>
 
       {/* FAQ */}
